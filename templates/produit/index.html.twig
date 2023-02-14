@@ -3,17 +3,17 @@
 {% block title %}Produit index{% endblock %}
 
 {% block body %}
-    <h1>All Products For Rent</h1>
+    <h1><center>Tous vos produits a louer</center></h1>
 
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Nom</th>
-                <th>Price</th>
-                <th>Availability</th>
+                <th>Prix</th>
+                <th>Date disponible</th>
                 <th>Type</th>
-                <th>actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -37,5 +37,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_produit_new') }}">Create new</a>
+    <a href="{{ path('app_produit_new') }}"><h5>Ajouter un produit</a>
 {% endblock %}

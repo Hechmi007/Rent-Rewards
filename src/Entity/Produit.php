@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ProduitRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 class Produit
@@ -15,15 +16,19 @@ class Produit
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"Le champ est vide !")]
     private ?string $nomproduit = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message:"Precisez le prix en TND")]
     private ?float $prixproduit = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotBlank(message:"Le champ est vide !")]
     private ?\DateTimeInterface $dateproduit = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"Preisez un type pour votre produit")]
     private ?string $type = null;
 
     public function getId(): ?int
