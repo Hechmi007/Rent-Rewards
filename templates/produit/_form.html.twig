@@ -2,8 +2,8 @@
 <table>
 {{ form_start(form,{'atr':{'novalidate':'novalidate'}}) }}
 <tr>
-<div class="form-group">
-    <td>{{ form_label(form.nomproduit,"Nom du produit a louer:") }}</td>
+<div class="mb-3">
+    <td>{{ form_label(form.nomproduit,"Product Name:") }}</td>
     <td>{{ form_widget(form.nomproduit,{'atr':{'class':'form-control'}}) }}</td>
     <td>{% if form_errors(form.nomproduit) is not empty %}</td>
     <div class="alert alter-danger"
@@ -13,9 +13,10 @@
     {% endif %}
 </div>
 <tr>
-<div class="form-group">
-    <td>{{ form_label(form.prixproduit,"Prix du location:") }}</td>
-    <td>{{ form_widget(form.prixproduit,{'atr':{'class':'form-control'}}) }}</td>
+<div class="input-group mb-3">
+    <td>{{ form_label(form.prixproduit,"Renting Price:") }}</td>
+    <td>{{ form_widget(form.prixproduit,{'atr':{'class':'input-group mb-3'}}) }}</td>
+    <td><span class="input-group-text">TND</span>
     <td>{% if form_errors(form.prixproduit) is not empty %}</td>
     <div class="alert alter-danger"
     <td>{{ form_errors(form.prixproduit) }}</td> </div>
@@ -23,9 +24,9 @@
     </tr>
 </div>
 <tr>
-<div class="form-group">
-    <td>{{ form_label(form.dateproduit,"Date de disponibilité:") }}</td>
-    <td>{{ form_widget(form.dateproduit,{'atr':{'class':'form-control'}}) }}</td>
+<div class="mb-3">
+    <td>{{ form_label(form.dateproduit,"Availability Date:") }}</td>
+    <td>{{ form_widget(form.dateproduit,{'atr':{'class':'mb-3'}}) }}</td>
     <td>{% if form_errors(form.dateproduit) is not empty %}</td>
     <div class="alert alter-danger"
    <td> {{ form_errors(form.dateproduit) }}</td> </div>
@@ -33,8 +34,8 @@
  </tr>
 </div>
 <tr>
-<div class="form-group">
-    <td>{{ form_label(form.type,"Type du produit:") }}</td>
+<div class="mb-3">
+    <td>{{ form_label(form.type,"Product Type:") }}</td>
     <td>{{ form_widget(form.type,{'atr':{'class':'form-control'}}) }}</td>
     <td>{% if form_errors(form.type) is not empty %}</td>
     <div class="alert alter-danger"
@@ -43,6 +44,6 @@
  </tr>
 </div>
 </table>
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
 </div>

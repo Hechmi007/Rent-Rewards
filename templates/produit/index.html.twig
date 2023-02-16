@@ -1,17 +1,18 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Produit index{% endblock %}
+{% block title %}Product index{% endblock %}
 
 {% block body %}
-    <h1><center>Tous vos produits a louer</center></h1>
-
-    <table class="table">
-        <thead>
+    <h1><center>All products for rent</center></h1>
+    <br>
+    <br>
+<div class="table-responsive">
+    <table class="table table-primary align-middle">
+        <thead class="table table-dark">
             <tr>
                 <th>Id</th>
-                <th>Nom</th>
-                <th>Prix</th>
-                <th>Date disponible</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Availability</th>
                 <th>Type</th>
                 <th>Actions</th>
             </tr>
@@ -25,8 +26,8 @@
                 <td>{{ produit.dateproduit ? produit.dateproduit|date('Y-m-d') : '' }}</td>
                 <td>{{ produit.type }}</td>
                 <td>
-                    <a href="{{ path('app_produit_show', {'id': produit.id}) }}">show</a>
-                    <a href="{{ path('app_produit_edit', {'id': produit.id}) }}">edit</a>
+                    <a class ="btn btn-primary" href="{{ path('app_produit_show', {'id': produit.id}) }}">show</a>
+                    <a class ="btn btn-primary" href="{{ path('app_produit_edit', {'id': produit.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -37,5 +38,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_produit_new') }}"><h5>Ajouter un produit</a>
+    <a href="{{ path('app_produit_new') }}"><h5>List new product</a>
 {% endblock %}

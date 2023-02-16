@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Nouveau produit{% endblock %}
+{% block title %}New Product{% endblock %}
 
 {% block body %}
-    <h1><center>Louer un produit</center></h1>
+    <h1><center>Rent a Product</center></h1>
 
     {{ include('produit/_form.html.twig') }}
 
-    <a href="{{ path('app_produit_index') }}"><h5>Afficher tous</a>
+    <a href="{{ path('app_produit_index') }}"><h5>Show all</a>
 {% endblock %}
