@@ -1,0 +1,38 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Products Categories{% endblock %}
+
+{% block body %}
+    <h1><center>Products Categories</center></h1>
+
+<div class="table-responsive">
+    <table class="table table-primary align-middle">
+        <thead class="table table-dark">
+            <tr>
+                <th>Id</th>
+                <th>Category</th>
+                <th>Digital</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for products_category in products_categories %}
+            <tr>
+                <td>{{ products_category.id }}</td>
+                <td>{{ products_category.Categoryname }}</td>
+                <td>{{ products_category.Type ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a class ="btn btn-primary text-white" href="{{ path('app_products_category_show', {'id': products_category.id}) }}">show</a>
+                    <a class ="btn btn-primary text-white" href="{{ path('app_products_category_edit', {'id': products_category.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a class ="btn btn-primary text-white" href="{{ path('app_products_category_new') }}">Create new</a>
+    <a class ="btn btn-primary text-white" href="http://127.0.0.1:8000/products/">Show Products</a>
+{% endblock %}

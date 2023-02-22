@@ -1,0 +1,55 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Products index{% endblock %}
+
+{% block body %}
+    <h1><center>All products for rent</center></h1>
+    <br>
+    <br>
+
+<div class="table-responsive">
+    <table class="table table-primary align-middle">
+        <thead class="table table-dark">
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Availability</th>
+                <th>Product Type</th>
+                <th>Picture</th>
+                <th>Adress</th>
+                <th>Category</th>
+                <th>Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for product in products %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td>{{ product.productname }}</td>
+                <td>{{ product.RentPrice }}</td>
+                <td>{{ product.Availabilitydate ? product.Availabilitydate|date('Y-m-d') : '' }}</td>
+                <td>{{ product.ProductType }}</td>
+                <td>{{ product.ProductPicture }}</td>
+                <td>{{ product.ProductAdress }}</td>
+                <td>{{ product.ProductsCategory }}</td>
+                <td>{{ product.StillAvailable ? 'Digital' : 'Physical' }}</td>
+                <td>
+                    <a class ="btn btn-primary text-white" href="{{ path('app_products_show', {'id': product.id}) }}">Show</a>
+                    <a class ="btn btn-primary text-white" href="{{ path('app_products_edit', {'id': product.id}) }}">Edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a class ="btn btn-secondary text-white" href="{{ path('app_products_new') }}">Add new product</a>
+    <br>
+    <br>
+    <a class ="btn btn-primary text-white" href="http://127.0.0.1:8000/products/category">Manage Categories</a>
+    <a class ="btn btn-primary text-white" href="http://127.0.0.1:8000/facture/">Manage Bills</a>
+{% endblock %}
