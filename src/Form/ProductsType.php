@@ -21,7 +21,7 @@ class ProductsType extends AbstractType
             ->add('RentPrice')
             ->add('Availabilitydate')
             ->add('ProductType')            
-            ->add('ProductPicture', FileType::class, [
+            ->add('ProductPicture', FileType::class, array('data_class' => null), [
                 'label' => 'Product Picture (Image file)',
                 'mapped' => true,
                 'required' => false,

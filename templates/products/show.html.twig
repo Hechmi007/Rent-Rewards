@@ -3,48 +3,59 @@
 {% block title %}Products{% endblock %}
 
 {% block body %}
-    <h1>Products</h1>
 
-    <table class="table">
+    <center><h1>{{ product.productname }} Description</h1></center>
+
+<br>
+<br>
+<div se
+<div class="container">
+    <table class="table table-striped" style="margin-left: auto">
         <tbody>
+        <tr>
+            <center><img src="{{ asset('images/trot.jpg') }}" width="300" height="330"></center>
+            {{ product.ProductPicture }}
+            <br>
+<br>
+
+</tr>
             <tr>
-                <th>Id</th>
+                <th class="thead-dark">Id</th>
                 <td>{{ product.id }}</td>
             </tr>
             <tr>
-                <th>Productname</th>
+                <th>Product Name</th>
                 <td>{{ product.productname }}</td>
             </tr>
             <tr>
-                <th>RentPrice</th>
+                <th>Price</th>
                 <td>{{ product.RentPrice }}</td>
             </tr>
             <tr>
-                <th>Availabilitydate</th>
+                <th>Availability Date</th>
                 <td>{{ product.Availabilitydate ? product.Availabilitydate|date('Y-m-d') : '' }}</td>
             </tr>
             <tr>
-                <th>ProductType</th>
+                <th>Product Type</th>
                 <td>{{ product.ProductType }}</td>
             </tr>
             <tr>
-                <th>ProductPicture</th>
-                <td>{{ product.ProductPicture }}</td>
-            </tr>
-            <tr>
-                <th>ProductAdress</th>
+                <th>Product Adress</th>
                 <td>{{ product.ProductAdress }}</td>
             </tr>
             <tr>
-                <th>StillAvailable</th>
+                <th>Digital Item</th>
                 <td>{{ product.StillAvailable ? 'Yes' : 'No' }}</td>
             </tr>
         </tbody>
     </table>
+<p align="right">
+    <a class ="btn btn-secondary text-white"  href="{{ path('app_products_index') }}">Rent Now</a>
+</p>
+    <br><br><br>
+    <a class ="btn btn-secondary text-white"  href="{{ path('app_products_index') }}">Back</a>
 
-    <a href="{{ path('app_products_index') }}">back to list</a>
-
-    <a href="{{ path('app_products_edit', {'id': product.id}) }}">edit</a>
-
+<br>
+<br>
     {{ include('products/_delete_form.html.twig') }}
 {% endblock %}

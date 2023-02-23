@@ -19,6 +19,12 @@ class Products
 
     #[Assert\NotBlank(message:"Precisez le nom")]
     #[ORM\Column(length: 255)]
+    #[Assert\Length(
+        min: 3,
+        max: 20,
+        minMessage: 'the lenght must be at least {{ limit }} characters long',
+        maxMessage: 'the lenght demanded  cannot be longer than {{ limit }} characters',
+    )]
     private ?string $productname = null;
 
     #[ORM\Column]
@@ -26,11 +32,16 @@ class Products
     private ?float $RentPrice = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Assert\NotBlank(message:"Select date !!")]
     private ?\DateTimeInterface $Availabilitydate = null;
     
     #[Assert\NotBlank(message:"Precisez le type")]
     #[ORM\Column(length: 255)]
+    #[Assert\Length(
+        min: 3,
+        max: 20,
+        minMessage: 'the lenght must be at least {{ limit }} characters long',
+        maxMessage: 'the lenght demanded  cannot be longer than {{ limit }} characters',
+    )]
     private ?string $ProductType = null;
 
     #[ORM\Column(length: 255)]
@@ -38,6 +49,12 @@ class Products
     private ?string $ProductPicture = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(
+        min: 5,
+        max: 50,
+        minMessage: 'the lenght must be at least {{ limit }} characters long',
+        maxMessage: 'the lenght demanded  cannot be longer than {{ limit }} characters',
+    )]
     #[Assert\NotBlank(message:"Le champ est vide !")]
     private ?string $ProductAdress = null;
 
