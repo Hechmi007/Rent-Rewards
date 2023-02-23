@@ -1,0 +1,59 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}CharityDemand index
+{% endblock %}
+
+{% block body %}
+	<h1>CharityDemand index</h1>
+
+
+	<div class="table-responsive">
+		<table class="table table-primary align-middle">
+			<thead class="table table-dark">
+				<tr>
+					<th>Id</th>
+					<th>Title</th>
+					<th>Receiver</th>
+					<th>Pointsdemanded</th>
+					<th>category</th>
+					<th>userName</th>
+					<th>Datedemand</th>
+					<th>actions</th>
+					<th>isValid</th>
+
+
+				</tr>
+			</thead>
+			<tbody>
+				{% for charity_demand in charity_demands %}
+					<tr>
+						<td>{{ charity_demand.id }}</td>
+						<td>{{ charity_demand.title }}</td>
+						<td>{{ charity_demand.receiver }}</td>
+						<td>{{ charity_demand.pointsdemanded }}</td>
+						<td>{{ charity_demand.getcategory }}</td>
+						{#tekhoo categorie a partir de la methode to string dans classe entity tnajjem tekhedh l t7ebb ml tableau te3 categorie #}
+						<td>{{ charity_demand.getusername }}</td>
+						{#tekhoo user name  a partir de la methode to string dans classe entity tnajjem tekhedh l t7ebb ml tableau te3 user  #}
+						<td>{{ charity_demand.datedemand ? charity_demand.datedemand|date('Y-m-d') : '' }}</td>
+
+
+						<td>
+
+							<a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_charity_demand_show', {'id': charity_demand.id}) }}">show</a>
+							<a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_charity_demand_edit', {'id': charity_demand.id}) }}">edit</a>
+						</td>
+						<td>
+
+							 <a class="btn btn-success text-white py-3 px-4">Valider</a> 
+						</td>
+					</tr>
+				</td>
+			</tbody>
+		</tr>
+	{% else %}
+		<tr>
+			<td colspan="6">no records found</td>
+		</tr>
+	{% endfor %}
+</tbody></table><a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_charity_demand_new') }}">Create new</a><a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_charity_demand_pdf') }}">imprimer</a>{% endblock %}

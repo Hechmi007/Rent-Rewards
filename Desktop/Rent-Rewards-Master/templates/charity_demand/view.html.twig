@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}here we can view all charities you need to donate
+{% endblock %}
+
+{% block body %}
+
+	<div class="container">
+		<div class="row mb-5 align-items-center">
+			<div class="col-lg-6">
+				<h2 class="font-weight-bold text-primary heading">
+					<center>All Charities</center>
+
+
+				</h2>
+			</div>
+
+		</div>
+
+		{% for charity_demand in charity_demands %}
+			{# {% if charity_demand.isValid == true %} #}
+
+				<div class="section">
+					<div class="row">
+						<div class="col-12">
+							<div class="property-slider-wrap">
+								<div class="property-slider">
+									<div
+										class="property-item">
+										{# lhne bch n7ott fazzet upload image bch tabde temchili  #}
+										<br>
+										<img src="images/donation1.jpeg" alt="Image" class="img-fluid"/>
+									</a>
+									<div class="property-content">
+										<div class="price mb-2">
+											<span>{{charity_demand.pointsdemanded}}
+											</span>
+										</div>
+										<div>
+											<span class="d-block mb-2 text-black-50">{{charity_demand.title}}</span>
+											<span class="city d-block mb-3">{{charity_demand.receiver}}
+											</span>
+
+											<br>
+											<a href="/donation/new" class="btn btn-primary py-2 px-3">Donate
+											</a>
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+				
+			{# {% endif %} #}
+
+		{% else %}
+			<div>
+				<div style="border: 1px solid black; padding: 10px;">
+					<center>No Records Founds.</center>
+				</div>
+			</div>
+		{% endfor %}
+		<div class="section">
+			<div id="property-nav" class="controls" tabindex="0" aria-label="Carousel Navigation">
+				<span class="prev" data-controls="prev" aria-controls="property" tabindex="-1">Prev</span>
+				<span class="next" data-controls="next" aria-controls="property" tabindex="-1">Next</span>
+			</div>
+		</div>
+
+
+	{% endblock %}
