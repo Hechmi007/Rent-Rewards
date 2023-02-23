@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="d-flex align-items-center justify-content-center vh-50">
+        {% if app.user %}
+            <h1 class="display-1 text-center mb-5">Welcome, {{ app.user.username }}!</h1>
+        {% else %}
+            <a href="{{ path('app_login') }}" class="btn btn-primary">Login</a>
+        {% endif %}
+    </div>
+{% endblock %}

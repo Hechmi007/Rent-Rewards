@@ -1,0 +1,25 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}{{ wallet.username.username }}'s Wallet{% endblock %}
+
+{% block body %}
+    <h1>{{ wallet.username.username }}'s Wallet</h1>
+
+    <dl>
+        <dt>Solde:</dt>
+        <dd>{{ wallet.solde }}</dd>
+
+        <dt>Points:</dt>
+        <dd>{{ wallet.points }}</dd>
+
+        <dt>Plan:</dt>
+        <dd>{{ wallet.plan }}</dd>
+    </dl>
+
+    <a href="{{ path('admin_wallet_edit', {'id': wallet.id}) }}">Edit</a>
+
+    <form action="{{ path('admin_wallet_delete', {'id': wallet.id}) }}" method="POST">
+        {{ csrf_token('delete' ~ wallet.id) }}
+        <button type="submit">Delete</button>
+    </form>
+{% endblock %}
