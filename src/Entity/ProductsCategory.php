@@ -27,6 +27,7 @@ class ProductsCategory
     private Collection $productname;
 
     #[ORM\ManyToOne(inversedBy: 'category')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Products $products = null;
 
     public function __construct()

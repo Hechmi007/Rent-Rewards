@@ -67,7 +67,8 @@ class Products
     #[ORM\ManyToOne(inversedBy: 'productname')]
     private ?ProductsCategory $productsCategory = null;
 
-    #[ORM\OneToMany(mappedBy: 'products', targetEntity: ProductsCategory::class)]
+    #[ORM\OneToMany(mappedBy: 'products', targetEntity: ProductsCategory::class, cascade: ["remove"])]
+    
     private Collection $category;
 
     public function __construct()
