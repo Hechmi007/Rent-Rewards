@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\CommentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 class Comment
@@ -20,7 +21,7 @@ class Comment
     #[ORM\Column]
     private ?int $upvotes = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdatcomment = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
@@ -28,7 +29,7 @@ class Comment
     private ?Post $IDPost = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $username = null;
 
     public function getId(): ?int
@@ -94,5 +95,20 @@ class Comment
         $this->username = $username;
 
         return $this;
+    }
+    public function getElapsedTime(): string
+    {
+        $now = new DateTime();
+        $interval = $this->createdatcomment->diff($now);
+
+        if ($interval->d > 0) {
+            return $interval->format('%dd %hh ago');
+        } elseif ($interval->h > 0) {
+            return $interval->format('%hh %im ago');
+        } elseif ($interval->i > 0) {
+            return $interval->format('%im %ss ago');
+        } else {
+            return 'Just now';
+        }
     }
 }

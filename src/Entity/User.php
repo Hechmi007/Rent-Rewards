@@ -3,59 +3,41 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
+class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 180, unique: true)]
     private ?string $username = null;
 
-    #[ORM\Column(type: Types::ARRAY)]
+    #[ORM\Column]
     private array $roles = [];
-
-    #[ORM\Column(length: 255)]
-    private ?string $email = null;
 
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-    #[ORM\OneToMany(mappedBy: 'username', targetEntity: Post::class)]
-    private Collection $Author;
-
-    #[ORM\OneToMany(mappedBy: 'username', targetEntity: Comment::class, orphanRemoval: true)]
-    private Collection $comments;
-
-    #[ORM\OneToMany(mappedBy: 'username', targetEntity: CharityDemand::class)]
-    private Collection $charityDemands;
-
-    #[ORM\OneToMany(mappedBy: 'username', targetEntity: Donation::class)]
-    private Collection $donations;
-
-    public function __construct()
-    {
-        $this->Author = new ArrayCollection();
-        $this->comments = new ArrayCollection();
-        $this->charityDemands = new ArrayCollection();
-        $this->donations = new ArrayCollection();
-    }
-
+    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'username')]
+    private $posts;
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getUsername(): ?string
+    /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
+     */
+    public function getUsername(): string
     {
-        return $this->username;
+        return (string) $this->username;
     }
 
     public function setUsername(string $username): self
@@ -65,9 +47,26 @@ class User
         return $this;
     }
 
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->username;
+    }
+
+    /**
+     * @see UserInterface
+     */
     public function getRoles(): array
     {
-        return $this->roles;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
 
     public function setRoles(array $roles): self
@@ -77,21 +76,33 @@ class User
         return $this;
     }
 
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
+    /**
+     * This method can be removed in Symfony 6.0 - is not needed for apps that do not check user passwords.
+     *
+     * @see PasswordAuthenticatedUserInterface
+     */
     public function getPassword(): ?string
     {
-        return $this->password;
+        return null;
+    }
+
+    /**
+     * This method can be removed in Symfony 6.0 - is not needed for apps that do not check user passwords.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 
     public function setPassword(string $password): self
@@ -101,123 +112,8 @@ class User
         return $this;
     }
 
-    /**
-     * @return Collection<int, Post>
-     */
-    public function getAuthor(): Collection
+    public function __toString(): string
     {
-        return $this->Author;
-    }
-
-    public function addAuthor(Post $author): self
-    {
-        if (!$this->Author->contains($author)) {
-            $this->Author->add($author);
-            $author->setUsername($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAuthor(Post $author): self
-    {
-        if ($this->Author->removeElement($author)) {
-            // set the owning side to null (unless already changed)
-            if ($author->getUsername() === $this) {
-                $author->setUsername(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Comment>
-     */
-    public function getComments(): Collection
-    {
-        return $this->comments;
-    }
-
-    public function addComment(Comment $comment): self
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
-            $comment->setUsername($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(Comment $comment): self
-    {
-        if ($this->comments->removeElement($comment)) {
-            // set the owning side to null (unless already changed)
-            if ($comment->getUsername() === $this) {
-                $comment->setUsername(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, CharityDemand>
-     */
-    public function getCharityDemands(): Collection
-    {
-        return $this->charityDemands;
-    }
-
-    public function addCharityDemand(CharityDemand $charityDemand): self
-    {
-        if (!$this->charityDemands->contains($charityDemand)) {
-            $this->charityDemands->add($charityDemand);
-            $charityDemand->setUsername($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCharityDemand(CharityDemand $charityDemand): self
-    {
-        if ($this->charityDemands->removeElement($charityDemand)) {
-            // set the owning side to null (unless already changed)
-            if ($charityDemand->getUsername() === $this) {
-                $charityDemand->setUsername(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Donation>
-     */
-    public function getDonations(): Collection
-    {
-        return $this->donations;
-    }
-
-    public function addDonation(Donation $donation): self
-    {
-        if (!$this->donations->contains($donation)) {
-            $this->donations->add($donation);
-            $donation->setUsername($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDonation(Donation $donation): self
-    {
-        if ($this->donations->removeElement($donation)) {
-            // set the owning side to null (unless already changed)
-            if ($donation->getUsername() === $this) {
-                $donation->setUsername(null);
-            }
-        }
-
-        return $this;
+        return $this->getUsername();
     }
 }

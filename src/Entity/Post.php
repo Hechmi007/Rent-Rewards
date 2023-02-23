@@ -3,12 +3,19 @@
 namespace App\Entity;
 
 use App\Repository\PostRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
+#[Vich\Uploadable]
 class Post
 {
     #[ORM\Id]
@@ -25,18 +32,63 @@ class Post
     #[ORM\Column]
     private ?int $rating = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdat = null;
 
-    #[ORM\ManyToOne(inversedBy: 'Author')]
-    private ?User $username = null;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts')]
+    #[ORM\JoinColumn(name: 'username_id', referencedColumnName: 'id')]
+    private $username;
 
     #[ORM\OneToMany(mappedBy: 'IDPost', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
 
+    #[ORM\Column]
+    private ?bool $visible = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $image = null;
+
+    #[Vich\UploadableField(mapping: 'post', fileNameProperty: 'image')]
+    private ?File $imageFile = null;
+
+
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedat = null;
+
+    
+
+
     public function __construct()
     {
+        $this->createdat = new DateTime();
+        $this->rating=0;
         $this->comments = new ArrayCollection();
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+
+        if (null !== $imageFile) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedat = new \DateTimeImmutable();
+        }
+    }
+    public function setimage(?string $image): void
+    {
+        $this->image = $image;
+    }
+
+    public function getimage(): ?string
+    {
+        return $this->image;
     }
 
     public function getId(): ?int
@@ -84,10 +136,12 @@ class Post
     {
         return $this->createdat;
     }
-
+    /**
+     * @ORM\PrePersist
+     */
     public function setCreatedat(\DateTimeInterface $createdat): self
     {
-        $this->createdat = $createdat;
+        $this->createdat = new DateTime();
 
         return $this;
     }
@@ -130,6 +184,48 @@ class Post
                 $comment->setIDPost(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getElapsedTime(): string
+    {
+        $now = new DateTime();
+        $interval = $this->createdat->diff($now);
+
+        if ($interval->d > 0) {
+            return $interval->format('%dd %hh ago');
+        } elseif ($interval->h > 0) {
+            return $interval->format('%hh %im ago');
+        } elseif ($interval->i > 0) {
+            return $interval->format('%im %ss ago');
+        } else {
+            return 'Just now';
+        }
+    }
+
+    public function isVisible(): ?bool
+    {
+        return $this->visible;
+    }
+
+    public function setVisible(bool $visible): self
+    {
+        $this->visible = $visible;
+
+        return $this;
+    }
+
+    
+
+    public function getUpdatedat(): ?\DateTimeInterface
+    {
+        return $this->updatedat;
+    }
+
+    public function setUpdatedat(?\DateTimeInterface $updatedat): self
+    {
+        $this->updatedat = $updatedat;
 
         return $this;
     }
