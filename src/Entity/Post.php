@@ -24,9 +24,11 @@ class Post
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank (message: 'Please enter a title')]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank (message: 'Please enter post content')]
     private ?string $content = null;
 
     #[ORM\Column]
@@ -39,7 +41,7 @@ class Post
     #[ORM\JoinColumn(name: 'username_id', referencedColumnName: 'id')]
     private $username;
 
-    #[ORM\OneToMany(mappedBy: 'IDPost', targetEntity: Comment::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'IDPost', targetEntity: Comment::class, orphanRemoval: true, cascade: ['remove'])]
     private Collection $comments;
 
     #[ORM\Column]
@@ -49,6 +51,7 @@ class Post
     private ?string $image = null;
 
     #[Vich\UploadableField(mapping: 'post', fileNameProperty: 'image')]
+    #[Assert\NotBlank (message: 'Please insert an image')]
     private ?File $imageFile = null;
 
 

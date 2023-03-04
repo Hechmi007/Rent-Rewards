@@ -3,9 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\CommentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 class Comment
@@ -16,6 +19,7 @@ class Comment
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank (message: 'Please insert your reply')]
     private ?string $contentcomment = null;
 
     #[ORM\Column]
@@ -28,9 +32,17 @@ class Comment
     #[ORM\JoinColumn(nullable: false)]
     private ?Post $IDPost = null;
 
-    #[ORM\ManyToOne(inversedBy: 'comments')]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?User $username = null;
+    #[ORM\ManyToOne(inversedBy: 'comments', targetEntity: User::class )]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $username;
+
+    #[ORM\OneToMany(mappedBy: 'comment', targetEntity: CommentLike::class)]
+    private Collection $commentLikes;
+
+    public function __construct()
+    {
+        $this->commentLikes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -110,5 +122,45 @@ class Comment
         } else {
             return 'Just now';
         }
+    }
+
+    /**
+     * @return Collection<int, CommentLike>
+     */
+    public function getCommentLikes(): Collection
+    {
+        return $this->commentLikes;
+    }
+
+    public function addCommentLike(CommentLike $commentLike): self
+    {
+        if (!$this->commentLikes->contains($commentLike)) {
+            $this->commentLikes->add($commentLike);
+            $commentLike->setComment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentLike(CommentLike $commentLike): self
+    {
+        if ($this->commentLikes->removeElement($commentLike)) {
+            // set the owning side to null (unless already changed)
+            if ($commentLike->getComment() === $this) {
+                $commentLike->setComment(null);
+            }
+        }
+
+        return $this;
+    }
+   
+    public function isLikedByUser(User $user): bool
+    {
+        foreach ($this->commentLikes as $like) {
+            if ($like->getUser() === $user) {
+                return true;
+            }
+        }
+        return false;
     }
 }

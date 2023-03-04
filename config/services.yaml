@@ -6,6 +6,9 @@
 parameters:
 
 services:
+# Alias the Doctrine\Persistence\ObjectManager interface to the default_entity_manager service
+    Doctrine\Persistence\ObjectManager:
+        alias: doctrine.orm.default_entity_manager
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.

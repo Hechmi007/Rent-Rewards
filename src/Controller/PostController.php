@@ -4,8 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\Post;
+use App\Entity\CommentLike;
 use App\Form\PostType;
 use App\Form\CommentType;
+use App\Form\SearchFormType;
+use App\Form\ShowAllFormType as AppShowAllFormType;
+use App\Repository\CommentLikeRepository;
 use App\Repository\PostRepository;
 use App\Repository\CommentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,6 +17,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use DateTime;
+use Doctrine\Persistence\ObjectManager;
+//use ShowallFormType;
 use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 use Symfony\Component\Security\Core\Security;
 
@@ -20,8 +26,9 @@ use Symfony\Component\Security\Core\Security;
 #[Route('/post')]
 class PostController extends AbstractController
 {
-    #[Route('/', name: 'app_post_index', methods: ['GET'])]
-    public function index(PostRepository $postRepository, Security $security): Response
+    
+    #[Route('/indexadmin', name: 'app_post_indexadmin', methods: ['GET'])]
+    public function indexadmin(PostRepository $postRepository, Security $security): Response
     {
         $user = $security->getUser();
 
@@ -32,17 +39,108 @@ class PostController extends AbstractController
             
         ]);
     }
-    #[Route('/showall', name: 'app_show_all', methods: ['GET'])]
-    public function showall(PostRepository $postRepository): Response
-    {
-        
-        return $this->render('post/show_all.html.twig', [
-            'posts' => $postRepository->findBy(['visible' => true]),
-            
-        ]);
-        
-      
+    #[Route('/', name: 'app_post_index', methods: ['GET'])]
+    public function index(): Response
+    {   
 
+        return $this->redirectToRoute('app_show_all', [], Response::HTTP_SEE_OTHER);
+        
+    }
+
+
+
+    #[Route('/showall/{page?1}/{sort?date_desc}', name: 'app_show_all', methods: ['GET', 'POST'],
+    requirements: ['page' => '\d+', 'sort' => '(date_asc|date_desc|title_asc|title_desc|rating_desc|comments_desc)'])]
+    public function showall(PostRepository $postRepository,$page,$sort,Request $request): Response
+    {
+            $showAllForm = $this->createForm(AppShowAllFormType::class, null, [
+            
+            
+            ]);
+            $showAllForm->handleRequest($request);
+        
+            if ($showAllForm->isSubmitted() && $showAllForm->isValid()) {
+                $nbr = $showAllForm->getData()['nbr'];
+                // Use $nbr to paginate your results
+            }else{
+                $nbr = 10;
+            }
+            
+        
+        
+
+        //get parameters from the query string
+        $page = $request->attributes->get('page', 1);
+    //$nbr = $request->attributes->get('nbr', 10);
+    $sort = $request->attributes->get('sort', 'date_desc');
+       //$sort = $request->query->get('sort','date_desc');
+    
+        // Determine the order by column and direction based on the selected sort option
+        switch($sort) {
+            case 'date_asc':
+                $orderBy = ['createdat' => 'ASC'];
+                break;
+            case 'date_desc':
+                $orderBy = ['createdat' => 'DESC'];
+                break;
+            case 'title_asc':
+                $orderBy = ['title' => 'ASC'];
+                break;
+            case 'title_desc':
+                $orderBy = ['title' => 'DESC'];
+                break;
+            case 'rating_desc':
+                $orderBy = ['rating' => 'DESC'];
+                break;
+            case 'comments_desc':
+                $orderBy = ['comments' => 'DESC'];
+                break;
+            default:
+                $orderBy = ['createdat' => 'DESC'];
+                break;
+        }
+        //$nbr = $request->query->getInt('nbr', 10);
+        
+        //$nbrPosts= $postRepository->count(['visible' => true]);
+        
+
+        //search
+        $searchForm = $this->createForm(SearchFormType::class);
+        $searchForm->handleRequest($request);
+
+        $posts = $postRepository->findBy(['visible' => true], $orderBy, $nbr, ($page - 1) * $nbr);
+        $nbrPosts = $postRepository->count(['visible' => true]);
+        $nbrPages= ceil($nbrPosts/$nbr);
+        if ($searchForm->isSubmitted() && $searchForm->isValid()) {
+            
+            $searchQuery = $searchForm->getData()['search'];
+
+            ($searchQuery==null? $searchQuery='':$searchQuery);
+            $posts = $postRepository->search($searchQuery);
+
+            $nbrPosts = count($posts);
+        } 
+            
+        
+           // $posts = $postRepository->findBy(['visible' => true],$orderBy, $nbr, ($page-1)*$nbr);
+           
+           //$page = $request->query->getInt('page', 1);
+           if($page > $nbrPages || $page < 1){
+               $page = 1;
+           }
+            //$posts=$postRepository->finByString($requestString);
+        
+         //dd($page,$nbr,$sort,$posts,$nbrPosts,$nbrPages);
+        return $this->render('post/show_all.html.twig', [
+            'posts' => $posts,
+            'isPaginated' => ($nbrPosts<10?false:true),
+            'nbrPages' => $nbrPages,
+            'currentPage' => $page,
+            'nbr' => $nbr,
+            'sort' => $sort,
+            'showAllForm' => $showAllForm->createView(),
+            'searchForm' => $searchForm->createView()
+        ]);
     
     }
 
@@ -69,7 +167,40 @@ class PostController extends AbstractController
             'form' => $form,
         ]);
     }
-
+    //like comment
+    #[Route('/comment/{id}/like', name: 'comment_like', methods: ['GET', 'POST'])]
+    public function like(Comment $comment, ObjectManager $manager, CommentLikeRepository $likeRepo, Security $security): Response
+    {
+        $user = $security->getUser();
+        if(!$user) return $this->json([
+            'code' => 403,
+            'message' => 'Unauthorized'
+        ], 403);
+        if($comment->isLikedByUser($user)){
+            $like = $likeRepo->findOneBy([
+                'comment' => $comment,
+                'user' => $user
+            ]);
+            $manager->remove($like);
+            $manager->flush();
+            return $this->json([
+                'code' => 200,
+                'message' => 'like removed',
+                'likes' => $likeRepo->count(['comment' => $comment])
+            ], 200);
+        }
+        $like = new CommentLike();
+        $like->setComment($comment)
+            ->setUser($user);
+        $manager->persist($like);
+        $manager->flush();
+        return $this->json([
+            'code' => 200,
+            'message' => 'like added',
+            'likes' => $likeRepo->count(['comment' => $comment])
+        ], 200); 
+        
+    }
     #[Route('/{id}', name: 'app_post_show', methods: ['GET', 'POST'])]
     public function show(Request $request, Post $post,Security $security): Response
     {
@@ -129,13 +260,18 @@ class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_post_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_post_delete', methods: ['GET', 'POST'])]
     public function delete(Request $request, Post $post, PostRepository $postRepository): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->request->get('_token'))) {
-            $postRepository->remove($post, true);
-        }
-
-        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+{
+    dump('Deleting post ' . $post->getId());
+    if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->request->get('_token'))) {
+        dump('CSRF token is valid');
+        $postRepository->remove($post, true);
+    } else {
+        dump('CSRF token is invalid');
     }
+
+    return $this->redirectToRoute('app_show_all', [], Response::HTTP_SEE_OTHER);
+    dump('Redirecting to app_show_all');
+}
 }

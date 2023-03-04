@@ -43,7 +43,7 @@
     {{ include('post/_delete_form.html.twig') }}
 
  #}
-    <section></section> <section></section> <section></section>
+    <section></section>  <section></section>
   
     <section id="blog" class="blog">
       <div class="container" data-aos="fade-up">
@@ -55,25 +55,49 @@
             <article class="entry entry-single">
 
               <div class="entry-img">
-                {% if post.image %}
+                
               <img src="{{ vich_uploader_asset(post, 'imageFile') }}" alt="Post Image">
-              {% endif %}
+              
               </div>
 
               <h2 class="entry-title">
                 <a href="">{{post.title}}</a>
+                
               </h2>
 
               <div class="entry-meta">
                 <ul>
+                
                   <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="blog-single.html">{{post.username}}</a></li>
                   <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="blog-single.html"><time datetime="2020-01-01">{{ post.createdat ? post.createdat|date('Y-m-d') : '' }}</time></a></li>
                   <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="blog-single.html">{{comments|length}} Comments</a></li>
-                  {% if post.username == app.user.username %}
+                  <li class="d-flex align-items-center"><a href="https://www.facebook.com/sharer/sharer.php?u={{ app.request.uri }}&amp;quote=Check+out+this+awesome+post" target="_blank">
+                    <i class="bi bi-facebook"></i>
+                    </a>
+                  </li>
+                 
+                   <li class="d-flex align-items-center">
+      <a href="https://twitter.com/intent/tweet?url={{ app.request.uri }}&amp;text=Check+out+this+awesome+post" target="_blank">
+        <i class="bi bi-twitter"></i>
+      </a>
+    </li>
+                  {% if post.username == user.username %}
                     <li class="d-flex align-items-center"><i class="bi bi-pencil-fill"></i>
                        <a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a></li>
-                    <li class="d-flex align-items-center"><i class="bi bi-trash3"></i>
-  <a href="{{ path('app_post_delete', {'id': post.id}) }}">Delete</a></li>
+                    
+                    <li class="d-flex align-items-center">
+                    <i class="bi bi-trash3-fill"></i>
+                    <form method="post" action="{{ path('app_post_delete', {'id': post.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                        <button class="btn"><u>Delete</u></button>
+                    </form>
+
+                    {# <form method="post" action="{{ path('app_post_delete', {'id': post.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                        <button class="btn">Delete</button>
+                    </form> #}
+
+                    </li>
                   {% endif %}
                 </ul>
               </div>
@@ -127,33 +151,81 @@
 
               <h4 class="comments-count">{{comments|length}} Comments</h4>
 
-                {% for comment in comments %}
-                <div id="comment-1" class="comment">
-                <div class="d-flex">
-                  <div class="comment-img"><img src="{{ asset('assets/img/blog/comments-1.jpg') }}" alt=""></div>
-                  <div>
-                    <h5><a href="">{{comment.username.getUsername()}}</a> <a href="#" class="reply"><i class="bi bi-reply-fill"></i> Reply</a></h5>
-                    
+            {% for comment in comments %}
+              <div id="comment-{{ comment.id }}" class="comment">
+                <div class="d-flex align-items-start">
+                  <div class="comment-img "><img src="{{ asset('assets/img/blog/comments-1.jpg') }}" alt=""></div>
+                  <div class="col">
+                    <div class="row g-0 align-items-center">
+                      <div class="col">
+                        <h5><a href="">{{comment.username.getUsername()}}</a></h5>
+                      </div>
+                      <div class="col-auto">
+                        {% if user.username == comment.username.getUsername() %}
+                        <form method="POST" action="{{ path('app_comment_delete', {'id': comment.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                          <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
+                          <button class="btn btn-danger"><i class="bi bi-trash3-fill"></i></button>
+                        </form>
+                        {% else %}
+                        <a href="#" class="reply"><i class="bi bi-reply-fill"></i> reply</a>
+                        {% endif %}
+                      </div>
+                    </div>
                     <time datetime="{{ comment.createdatcomment|date('Y-m-d') }}">
-                    {{ comment.getElapsedTime()}}
-                    {{ comment.createdatcomment ? comment.createdatcomment|date('Y-m-d') : '' }}
+                      {{ comment.getElapsedTime()}}
+                      {{ comment.createdatcomment ? comment.createdatcomment|date('Y-m-d') : '' }}
                     </time>
-                    
-                    
-                
-                    <p>
-                      {{comment.contentcomment}}
-                    </p>
+                    <p>{{comment.contentcomment}}</p>
+                    <div class="row g-0">
+                      <div class="col-1">
+                        <p class="mt-2 likes-count">{{comment.commentLikes|length }} Likes</p>
+                      </div>
+                      <div class="col-auto">
+                        
+        <a href="{{ path('comment_like', {'id':comment.id}) }}" class="btn btn-link js-like"><i class="bi bi-hand-thumbs-up"></i> Like</a>
+
+                      </div>
+                      <div class="col-auto">
+                        <a href="#" class="btn btn-link"><i class="bi bi-hand-thumbs-down"></i> Dislike</a>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                {% endfor %}
+              </div>
+            {% endfor %}
+            <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
 
+            <script>
+          function onClickBtnLike(event) {
+  event.preventDefault();
+  const commentId = this.dataset.commentId; // Get the comment ID from the dataset
+  const likesCount = document.querySelector(`#comment-${commentId} p.likes-count`); // Use the unique ID to get the likes count element
+  const icon = this.querySelector('i.bi.bi-hand-thumbs-up'); // Get the thumb icon element
 
+  axios.get(this.href).then(function(response) {
+    const likes = response.data.likes;
+    likesCount.textContent = `${likes} Likes`; // Update the likes count text
+    if (icon.classList.contains('bi-hand-thumbs-up')) {
+      icon.classList.replace('bi-hand-thumbs-up', 'bi-hand-thumbs-up-fill'); // Replace thumb icon with filled version
+    } else {
+      icon.classList.replace('bi-hand-thumbs-up-fill', 'bi-hand-thumbs-up'); // Replace thumb icon with regular version
+    }
+    console.log(response.data);
+  }).catch(function(error) {
+    console.log(error);
+  });
+}
+
+document.querySelectorAll('a.js-like').forEach(function(link) {
+  link.addEventListener('click', onClickBtnLike);
+  link.dataset.commentId = link.closest('.comment').id.split('-')[1]; // Set the comment ID in the dataset
+});
+            </script>
               <div class="reply-form">
                 <h4>Leave a Comment</h4>
                 
                 
-                 {{ form_start(comment_form,{'atr':{'novalidate':'novalidate'}}) }}
+                 {{ form_start(comment_form,{'attr':{'novalidate':'novalidate'}}) }}
                   <div class="row">
                     {{form_label(comment_form.contentcomment,'Give feedback on the post and remember to be polite')}}  
                   </div>
@@ -187,6 +259,8 @@
                   <input type="text">
                   <button type="submit"><i class="bi bi-search"></i></button>
                 </form>
+                
+
               </div><!-- End sidebar search formn-->
 
               <h3 class="sidebar-title">Categories</h3>

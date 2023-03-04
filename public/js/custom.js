@@ -1,4 +1,4 @@
-(function () {
+/* (function () {
 
 	'use strict'
 
@@ -122,4 +122,4 @@
 
 
 
-})()
+})() */

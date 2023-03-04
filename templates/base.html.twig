@@ -47,28 +47,29 @@
         {% endblock %}
 
         {% block javascripts %}
+  
 
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('js/tiny-slider.js') }}"></script>
     <script src="{{ asset('js/aos.js') }}"></script>
     <script src="{{ asset('js/navbar.js') }}"></script>
     <script src="{{ asset('js/counter.js') }}"></script>
-    <script src="{{ asset('js/custom.js') }}"></script>
-    <script src="{{ asset('/assets/vendor/purecounter/purecounter_vanilla.js') }}"></script>
-<script src="{{ asset('/assets/vendor/aos/aos.js') }}"></script>
-<script src="{{ asset('/assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('/assets/vendor/glightbox/js/glightbox.min.js') }}"></script>
-<script src="{{ asset('/assets/vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
-<script src="{{ asset('/assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
-<script src="{{ asset('/assets/vendor/waypoints/noframework.waypoints.js') }}"></script>
-<script src="{{ asset('/assets/vendor/php-email-form/validate.js') }}"></script>
+     <script src="{{ asset('js/custom.js') }}"></script> 
+    <script src="{{ asset('assets/vendor/purecounter/purecounter_vanilla.js') }}"></script>
+    
+ <script src="{{ asset('assets/vendor/aos/aos.js') }}"></script> 
+<script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('assets/vendor/glightbox/js/glightbox.min.js') }}"></script>
+<script src="{{ asset('assets/vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
+<script src="{{ asset('assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
+<script src="{{ asset('assets/vendor/waypoints/noframework.waypoints.js') }}"></script>
+<script src="{{ asset('assets/vendor/php-email-form/validate.js') }}"></script>
 
 <!-- Template Main JS File -->
-<script src="{{ asset('assets/js/main.js') }}"></script>
+ <script src="{{ asset('assets/js/main.js') }}"></script> 
 
 {# dashboard template #}
   
-
         {% endblock %}
     </head>
   <body>
@@ -111,7 +112,7 @@
                 <li class="has-children">
                 <a href="produit">Community</a>
                 <ul class="dropdown">
-                  <li><a href="#">Blog</a></li>
+                  <li><a href="{{ path('app_show_all', {'page': 1, 'nbr': 10, 'sort': 'title_asc'}) }}">Blog</a></li>
                   <li><a href="#">Complain Center</a></li>
                   <li class="has-children">
                     <a href="#">Dropdown</a>
@@ -124,13 +125,13 @@
                 </ul>
   
               <li><a href="services.html">Rewards</a></li>
-              <li><a href="../dashboard/index.html">Blog</a></li>
+              <li><a href="{{ path('app_show_all', {'page': 1, 'nbr': 10, 'sort': 'title_asc'}) }}">Blog</a></li>
               <li><a href="contact.html">Charity</a></li>
-              {% if app.user %}
+               {% if app.user %}
                 <li><a href="app_post_index">{{ app.user.username }}</a></li>
               {% else %}
                 <li><a href="app_post_index">Login</a></li>
-              {% endif %}
+              {% endif %} 
 
               
             </ul>

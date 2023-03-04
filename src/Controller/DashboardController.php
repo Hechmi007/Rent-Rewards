@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Repository\PostRepository;
 
 use App\Entity\Post;
+use App\Repository\CreditRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,5 +35,12 @@ class DashboardController extends AbstractController
         $entityManager->persist($post);
         $entityManager->flush();
         return $this->redirectToRoute('app_dashboard_post', [], Response::HTTP_SEE_OTHER);
+    }
+    #[Route('/creditback', name: 'app_dashboard_credit', methods: ['GET'])]
+    public function credits(CreditRepository $creditRepository): Response
+    {
+        return $this->render('dashboard/credit.html.twig', [
+            'credits' => $creditRepository->findAll(),
+        ]);
     }
 }

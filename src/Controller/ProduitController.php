@@ -43,6 +43,7 @@ class ProduitController extends AbstractController
     #[Route('/{id}', name: 'app_produit_show', methods: ['GET'])]
     public function show(Produit $produit): Response
     {
+        dump('Deleting post ' . $produit->getId());
         return $this->render('produit/show.html.twig', [
             'produit' => $produit,
         ]);
@@ -66,9 +67,10 @@ class ProduitController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_produit_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_produit_delete', methods: ['DELETE'])]
     public function delete(Request $request, Produit $produit, ProduitRepository $produitRepository): Response
     {
+        dump('Deleting post ' . $produit->getId());
         if ($this->isCsrfTokenValid('delete'.$produit->getId(), $request->request->get('_token'))) {
             $produitRepository->remove($produit, true);
         }

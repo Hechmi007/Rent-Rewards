@@ -34,8 +34,30 @@
 {% endblock %} #}
 {% extends 'base.html.twig' %}
 {% block body %}
+
+
 <div class="row  align-middle">
 
+<div class="section">
+      <div class="row justify-content-center footer-cta" data-aos="fade-up">
+        <div class="col-lg-7 mx-auto text-center">
+          <h3 class="mb-4">Be a part our community</h2>
+          <p>
+            <a
+              href="{{ path('app_post_new') }}"
+              target="_blank"
+              class="btn btn-primary text-white py-3 px-4"
+              >Create Post</a
+            >
+          </p>
+        </div>
+        <!-- /.col-lg-7 -->
+      </div>
+      <!-- /.row -->
+    </div>
+
+
+
 
 
 
@@ -43,11 +65,61 @@
 
 </div>
 </div>
-<div  class="blog mt-6">
+<div  class="blog mt-2">
       <div class="container" >
 
+        
+
+        
         <div class="row">
 
+
+          <div class="row">
+            <div class="col-8">
+              <h2>Posts</h2>
+              <p>Check our latest posts</p>
+            </div>
+            <div class="col-4 pb-6 align-self-end">
+              <div class="row justify-content-around g-0">
+                <div class="col">
+                  <h4 class="mt-1 mx-auto">Sort Options</h4>
+                </div>
+                <div class="col">
+
+                  <form method="get" action="{{ path('app_show_all', {'page': currentPage, 'nbr': nbr,'sort': sort}) }}">
+                    <label for="sort">Sort by:</label>
+                    <select class="form-select form-select mb-3" id="sort" name="sort" onchange="this.form.submit()">
+                      <option value="date_desc"{{ sort == 'date_desc' ? ' selected' : '' }}>Date (newest to oldest)</option>
+                      <option value="date_asc"{{ sort == 'date_asc' ? ' selected' : '' }}>Date (oldest to newest)</option>
+                      <option value="title_asc"{{ sort == 'title_asc' ? ' selected' : '' }}>Title (A-Z)</option>
+                      <option value="title_desc"{{ sort == 'title_desc' ? ' selected' : '' }}>Title (Z-A)</option>
+                      <option value="rating_desc"{{ sort == 'rating_desc' ? ' selected' : '' }}>Rating (highest to lowest)</option>
+                      <option value="comments_desc"{{ sort == 'comments_desc' ? ' selected' : '' }}>Number of comments (highest to lowest)</option>
+                    </select>
+                  </form>
+
+                  {# <select class="form-select form-select mb-3" aria-label=".form-select-lg example">
+                    <option selected>sort option</option>
+                    <option value="1">option One</option>
+                    <option value="2">option Two</option>
+                    <option value="3">option Three</option>
+                  </select> #}
+                </div>
+              </div>
+
+
+
+              {# <h2>Sort Options</h2>
+              <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                <option selected>Open this select menu</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select> #}
+            </div>
+
+            
+          </div>
           <div class="col-lg-8 entries">
             {% for post in posts %}
             <article class="entry">
@@ -69,8 +141,7 @@
                   <li class="d-flex align-items-center"><i class="bi bi-hourglass-bottom"></i> <a href="{{ path('app_post_show', {'id': post.id}) }}"><time >{{ post.getElapsedTime()}}</time></a></li>
                   <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="{{ path('app_post_show', {'id': post.id}) }}">{{post.comments|length}} Comments</a></li>
                   <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="{{ path('app_post_show', {'id': post.id}) }}"><time >{{ post.createdat ? post.createdat|date('Y-m-d') : '' }}</time></a></li>
-
-                </ul>
+                  <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="{{ path('app_post_show', {'id': post.id}) }}">{{post.rating}} stars</a></li>                </ul>
               </div>
 
               <div class="entry-content">
@@ -86,26 +157,57 @@
             {% endfor %}
            
 
+        {% if isPaginated %}
             <div class="blog-pagination">
               <ul class="justify-content-center">
-                <li><a href="#">1</a></li>
-                <li class="active"><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
+              <li ><a href="{{ path('app_show_all', {'page': currentPage-1 }) }}"><i class="bi bi-chevron-double-left"></i></a></li>
+              {% for i in range(1, nbrPages) %}
+                <li class="{{ i == currentPage ? 'active' : '' }}"><a href="{{path('app_show_all', {'page': i,'sort':sort}) }}">{{i}}</a></li>
+              {% endfor %}
+                {% dump nbrPages, currentPage, nbr, sort %}
+                <li ><a href="{{ path('app_show_all', {'page': currentPage+1,'sort':sort}) }}"><i class="bi bi-chevron-double-right"></i></a></li>
+              {# <li ><a href=""><i class="bi bi-sliders2-vertical"></i></a></li> #}
+              <li >
+                
+                  {# <label for="nbr">Show:</label>
+                  <a href="{{ path('app_show_all', {'page': 1, 'nbr': 5, 'sort': sort}) }}">
+                  <select name="nbr" id="nbr" onchange="this.form.submit()">
+                    <option value="5" {{ nbr == 5 ? 'selected' : '' }}><a href="{{ path('app_show_all', {'page': 1, 'nbr': 5, 'sort': sort}) }}">5 per page</a></option>
+                    <option value="10" {{ nbr == 10 ? 'selected' : '' }}><a href="{{ path('app_show_all', {'page': 1, 'nbr': 10, 'sort': sort}) }}">10 per page</a></option>
+                    <option value="20" {{ nbr == 20 ? 'selected' : '' }}><a href="{{ path('app_show_all', {'page': 1, 'nbr': 15, 'sort': sort}) }}">15 per page</a></option>
+                    <option value="50" {{ nbr == 50 ? 'selected' : '' }}><a href="{{ path('app_show_all', {'page': 1, 'nbr': 20, 'sort': sort}) }}">20 per page</a></option>
+                  </select></a>
+                   #}
+                {{ include('post/showall.html.twig') }}
+              </li>
+              <script>
+              document.querySelector('label[for="show_all_form_nbr"]').style.display = 'none';
+              </script>
+              {# {{ include('post/showall.html.twig') }} #}
+              
+                
+
               </ul>
             </div>
+            
+            {% endif %}
 
           </div><!-- End blog entries list -->
-
+          
           <div class="col-lg-4">
 
             <div class="sidebar">
 
               <h3 class="sidebar-title">Search</h3>
               <div class="sidebar-item search-form">
-                <form action="">
-                  <input type="text">
+                
+                {{ form_start(searchForm) }}
+                  
+                {{ form_widget(searchForm.search) }}
+                  
                   <button type="submit"><i class="bi bi-search"></i></button>
-                </form>
+                {{ form_end(searchForm) }} 
+                
               </div><!-- End sidebar search formn-->
 
               <h3 class="sidebar-title">Categories</h3>

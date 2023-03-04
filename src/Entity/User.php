@@ -3,13 +3,16 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
-class User implements UserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -22,11 +25,20 @@ class User implements UserInterface
     #[ORM\Column]
     private array $roles = [];
 
-    #[ORM\Column(length: 255)]
+    /**
+     * @var string The hashed password
+     */
+    #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'username')]
-    private $posts;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: CommentLike::class)]
+    private Collection $commentLikes;
+
+    public function __construct()
+    {
+        $this->commentLikes = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -38,6 +50,10 @@ class User implements UserInterface
     public function getUsername(): string
     {
         return (string) $this->username;
+    }
+    public function __toString(): string
+    {
+        return $this->getUsername();
     }
 
     public function setUsername(string $username): self
@@ -77,17 +93,23 @@ class User implements UserInterface
     }
 
     /**
-     * This method can be removed in Symfony 6.0 - is not needed for apps that do not check user passwords.
-     *
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): ?string
+    public function getPassword(): string
     {
-        return null;
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
     }
 
     /**
-     * This method can be removed in Symfony 6.0 - is not needed for apps that do not check user passwords.
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
      *
      * @see UserInterface
      */
@@ -105,15 +127,33 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    public function setPassword(string $password): self
+    /**
+     * @return Collection<int, CommentLike>
+     */
+    public function getCommentLikes(): Collection
     {
-        $this->password = $password;
+        return $this->commentLikes;
+    }
+
+    public function addCommentLike(CommentLike $commentLike): self
+    {
+        if (!$this->commentLikes->contains($commentLike)) {
+            $this->commentLikes->add($commentLike);
+            $commentLike->setUser($this);
+        }
 
         return $this;
     }
 
-    public function __toString(): string
+    public function removeCommentLike(CommentLike $commentLike): self
     {
-        return $this->getUsername();
+        if ($this->commentLikes->removeElement($commentLike)) {
+            // set the owning side to null (unless already changed)
+            if ($commentLike->getUser() === $this) {
+                $commentLike->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Persistence\ManagerRegistry;
 
 #[Route('/comment')]
 class CommentController extends AbstractController
@@ -66,13 +67,18 @@ class CommentController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_comment_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_comment_delete', methods: ['GET', 'POST'])]
     public function delete(Request $request, Comment $comment, CommentRepository $commentRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$comment->getId(), $request->request->get('_token'))) {
             $commentRepository->remove($comment, true);
         }
 
-        return $this->redirectToRoute('app_comment_index', [], Response::HTTP_SEE_OTHER);
+        $referer = $request->headers->get('referer');
+        if ($referer) {
+            return $this->redirect($referer);
+        } else {
+            return $this->redirectToRoute('app_show_all', [], Response::HTTP_SEE_OTHER);
+        }
     }
 }

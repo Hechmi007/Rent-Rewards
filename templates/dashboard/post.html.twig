@@ -223,7 +223,8 @@
 
                                     <form action="{{ path('app_toggle_visibility', {'id': post.id}) }}" method="post">
                                         <input type="hidden" name="_method" value="PUT">
-                                        <button type="submit" class="btn btn-primary">{% if post.visible %}
+                                        <button type="submit" class="btn btn-primary">
+                                        {% if post.visible %}
                                             <i class="bi bi-eye-fill"></i>
                                     {% else %}
                                             <i class="bi bi-eye-slash-fill"></i>         
