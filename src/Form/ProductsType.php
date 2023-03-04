@@ -23,7 +23,7 @@ class ProductsType extends AbstractType
             ->add('ProductType')            
             ->add('ProductPicture', FileType::class, array('data_class' => null), [
                 'label' => 'Product Picture (Image file)',
-                'mapped' => true,
+                'mapped' => false,
                 'required' => false,
                 'constraints' => [
                     new File([

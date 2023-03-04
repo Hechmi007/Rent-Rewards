@@ -16,7 +16,7 @@
             </tr>
         </thead>
         <tbody>
-        {% for products_category in products_categories %}
+        {% for products_category in pagination %}
             <tr>
                 <td>{{ products_category.id }}</td>
                 <td>{{ products_category.Categoryname }}</td>
@@ -31,6 +31,8 @@
                 <td colspan="4">no records found</td>
             </tr>
         {% endfor %}
+        <div class="pagination pagination-lg">
+        {{ knp_pagination_render(pagination) }}
         </tbody>
     </table>
     <a class ="btn btn-primary text-white" href="{{ path('app_products_category_new') }}">Create new</a>

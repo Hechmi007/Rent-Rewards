@@ -29,7 +29,16 @@ class ProductsRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
+    public function search(string $query = '')
+    {
+        $qb = $this->createQueryBuilder('p');
+        
+        $qb->where('p.productname LIKE :query')
+           ->setParameter('query', '%'.$query.'%')
+           ->orderBy('p.productname', 'ASC');
+        
+        return $qb->getQuery()->getResult();
+    }    
     public function remove(Products $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
@@ -38,6 +47,17 @@ class ProductsRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    public function getProductDataByCategory()
+{
+    return $this->createQueryBuilder('product')
+        ->select('product.productscategory as category, count(product.id) as product_count')
+        ->join('product.productscategory', 'categoryname')
+        ->groupBy('product.id')
+        ->getQuery()
+        ->getResult();
+}
+
 
 //    /**
 //     * @return Products[] Returns an array of Products objects

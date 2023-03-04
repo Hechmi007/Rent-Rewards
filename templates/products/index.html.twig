@@ -25,14 +25,14 @@
             </tr>
         </thead>
         <tbody>
-        {% for product in products %}
+        {% for product in pagination %}
             <tr>
                 <td>{{ product.id }}</td>
                 <td>{{ product.productname }}</td>
                 <td>{{ product.RentPrice }}</td>
                 <td>{{ product.Availabilitydate ? product.Availabilitydate|date('Y-m-d') : '' }}</td>
                 <td>{{ product.ProductType }}</td>
-                <td>{{ product.ProductPicture }}</td>
+                <td><img src="{{ asset('/uploads/products/' ~ product.ProductPicture) }}" style="width: 50%; height: auto;"></td>
                 <td>{{ product.ProductAdress }}</td>
                 <td>{{ product.ProductsCategory }}</td>
                 <td>{{ product.StillAvailable ? 'Digital' : 'Physical' }}</td>
@@ -46,11 +46,14 @@
                 <td colspan="9">no records found</td>
             </tr>
         {% endfor %}
+        <div class="pagination pagination-sm">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+
         </tbody>
     </table>
     <a class ="btn btn-secondary text-white" href="{{ path('app_products_new') }}">Add new product</a>
     <br>
     <br>
     <a class ="btn btn-primary text-white" href="http://127.0.0.1:8000/products/category">Manage Categories</a>
-    <a class ="btn btn-primary text-white" href="http://127.0.0.1:8000/facture/">Manage Bills</a>
 {% endblock %}

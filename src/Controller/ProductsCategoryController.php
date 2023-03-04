@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Knp\Component\Pager\PaginatorInterface;
 use App\Entity\ProductsCategory;
 use App\Form\ProductsCategoryType;
 use App\Repository\ProductsCategoryRepository;
@@ -14,10 +15,22 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProductsCategoryController extends AbstractController
 {
     #[Route('/', name: 'app_products_category_index', methods: ['GET'])]
-    public function index(ProductsCategoryRepository $productsCategoryRepository): Response
+    public function index(ProductsCategoryRepository $ProductsCategoryRepository, Request $request, PaginatorInterface $paginator): Response
     {
+        $entityManager = $this->getDoctrine()->getManager();
+        $productRepository = $entityManager->getRepository(ProductsCategory::class);
+        
+        $queryBuilder = $ProductsCategoryRepository->createQueryBuilder('pc')
+            ->orderBy('pc.id', 'DESC');
+        
+        $pagination = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            5
+        );
+        
         return $this->render('products_category/index.html.twig', [
-            'products_categories' => $productsCategoryRepository->findAll(),
+            'pagination' => $pagination,
         ]);
     }
 

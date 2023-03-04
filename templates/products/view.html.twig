@@ -15,6 +15,9 @@
 			</div>
 
 		</div>
+		{{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
 
 		{% for products in products %}
 			<div class="section">
@@ -56,12 +59,6 @@
 				<div style="border: 1px solid black; padding: 10px;" ><center>No Records Founds.</center></div>
 			</div>
 		{% endfor %}
-		<div class="section">
-			<div id="property-nav" class="controls" tabindex="0" aria-label="Carousel Navigation">
-				<span class="prev" data-controls="prev" aria-controls="property" tabindex="-1">Prev</span>
-				<span class="next" data-controls="next" aria-controls="property" tabindex="-1">Next</span>
-			</div>
-		</div>
 		
 
 	{% endblock %}
