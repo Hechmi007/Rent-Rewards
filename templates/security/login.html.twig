@@ -3,7 +3,7 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-<form method="post">
+<form method="post" novalidate>
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
@@ -17,8 +17,11 @@
     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
     <label for="inputEmail">Email</label>
     <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+    <span id="email-error" style="display:none; color:red;">Please insert your email</span>
+
     <label for="inputPassword">Password</label>
     <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+ <span id="password-error" style="display:none; color:red;">Please insert your password</span>
 
     <input type="hidden" name="_csrf_token"
            value="{{ csrf_token('authenticate') }}"
@@ -34,9 +37,35 @@
             </label>
         </div>
     #}
-
-    <button class="btn btn-lg btn-primary" type="submit">
+    <button class="btn btn-lg btn-primary" type="submit" onclick="return validateLoginForm();">
         Sign in
     </button>
+      <a href="{{ path('app_forgot_password') }}" class="btn btn-link">Forgot Password?</a>
 </form>
+<script>
+function validateLoginForm() {
+    var email = document.getElementById('inputEmail');
+    var password = document.getElementById('inputPassword');
+    var emailError = document.getElementById('email-error');
+    var passwordError = document.getElementById('password-error');
+    
+    if (email.value == '') {
+        emailError.style.display = 'block';
+        return false;
+    }
+    else {
+        emailError.style.display = 'none';
+    }
+    
+    if (password.value == '') {
+        passwordError.style.display = 'block';
+        return false;
+    }
+    else {
+        passwordError.style.display = 'none';
+    }
+    
+    return true;
+}
+</script>
 {% endblock %}

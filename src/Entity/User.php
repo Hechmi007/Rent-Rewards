@@ -9,28 +9,49 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
-
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class User implements UserInterface
+class User implements UserInterface , PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+        
+    #[ORM\Column(type:"string", nullable:true)] 
+    private $resetToken;
+    
+     #[ORM\Column(type:"boolean")] 
+    private $EmailVerified = false;
+
+    #[ORM\Column(type:"boolean")]
+    private $banned= false;
+
+     #[ORM\Column(type:"string", length:55, nullable:true)] 
+    private $confirmationToken;
+
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"please insert you username")]
     private ?string $username = null;
 
     #[ORM\Column(type: Types::ARRAY)]
+    #[Assert\NotBlank(message:"you should choose")]
     private array $roles = [];
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"please insert a username")]
     private ?string $email = null;
 
     
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"this field should not be empty")]
     private ?string $password = null;
+
+
+    #[ORM\OneToOne(targetEntity: Wallet::class, mappedBy:'username', cascade: ['persist', 'remove'])]
+    private ?Wallet $wallet = null;
 
     #[ORM\OneToMany(mappedBy: 'username', targetEntity: Post::class)]
     private Collection $Author;
@@ -43,6 +64,8 @@ class User implements UserInterface
 
     #[ORM\OneToMany(mappedBy: 'username', targetEntity: Donation::class)]
     private Collection $donations;
+
+   
 
     public function __construct()
     {
@@ -241,8 +264,6 @@ class User implements UserInterface
 
         return $this;
     }
-    private $wallet;
-
     public function getWallet(): ?Wallet
     {
         return $this->wallet;
@@ -256,6 +277,51 @@ class User implements UserInterface
         if ($this !== $wallet->getUsername()) {
             $wallet->setUsername($this);
         }
+
+        return $this;
+    }
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): self
+    {
+        $this->resetToken = $resetToken;
+
+        return $this;
+    }
+    public function getEmailVerified(): bool
+    {
+        return $this->EmailVerified;
+    }
+
+    public function setEmailVerified(bool $EmailVerified): self
+    {
+        $this->EmailVerified = $EmailVerified;
+
+        return $this;
+    }
+
+    public function getConfirmationToken(): ?string
+    {
+        return $this->confirmationToken;
+    }
+
+    public function setConfirmationToken(?string $confirmationToken): self
+    {
+        $this->confirmationToken = $confirmationToken;
+
+        return $this;
+    }
+    public function isBanned(): bool
+    {
+        return $this->banned;
+    }
+
+    public function setBanned(bool $banned): self
+    {
+        $this->banned = $banned;
 
         return $this;
     }

@@ -5,7 +5,7 @@
 {% block body %}
     <h1>Edit Wallet</h1>
 
-    {{ form_start(form) }}
+{{ form_start(form,{'atr':{'novalidate':'novalidate'}}) }}
     {{ form_widget(form) }}
     <button type="submit">Save</button>
     {{ form_end(form) }}

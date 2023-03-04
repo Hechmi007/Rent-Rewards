@@ -25,3 +25,8 @@ app_wallet_delete:
 app_wallet_edit:
     path: /wallets/{id}
     controller: App\Controller\WalletController::edit
+confirm_email:
+    path: '/confirm-email/{token}'
+    controller: App\Controller\RegistrationController::confirmEmail
+    methods: ['GET']
+    

@@ -1,0 +1,12 @@
+
+{% block body %}
+    <h1>Confirm Your Email Address</h1>
+    {% if app.user is not null %}
+        <p>Dear {{ app.user.username }},</p>
+    {% endif %}
+    <p>Thank you for signing up for our Site! To complete your registration, please click the following link to confirm your email address:</p>
+    {% if url is not null %}
+        <p><a href="{{ url }}">{{ url }}</a></p>
+    {% endif %}
+    <p>If you did not create an account on our Site, please disregard this email.</p>
+{% endblock %}

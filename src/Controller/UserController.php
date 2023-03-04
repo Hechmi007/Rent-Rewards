@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use App\Repository\WalletRepository;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,11 +22,16 @@ class UserController extends AbstractController
         $this->passwordEncoder = $passwordEncoder;
     }
 
-    #[Route('/', name: 'app_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    #[Route('/{page?1}/{nbre?2}', name: 'app_user_index', methods: ['GET'])]
+    public function index(UserRepository $userRepository,$nbre,$page): Response
     {
-        return $this->render('user/index.html.twig', [
-            'users' => $userRepository->findAll(),
+        $nbUser = $userRepository -> count([]);
+        $nbrePage = ceil($nbUser / $nbre);
+        return $this->render('user/index.html.twig', ['isPaginated'=>true,
+            'users' => $userRepository->findBy([],[],$nbre,($page -1) * $nbre),
+            'nbrePage' => $nbrePage,
+            'page' => $page,
+            'nbre' => $nbre,
         ]);
     }
 
@@ -86,12 +93,16 @@ class UserController extends AbstractController
         ]);
     }
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
-    public function delete(Request $request, User $user, UserRepository $userRepository): Response
+    public function delete(Request $request, User $user, UserRepository $userRepository, WalletRepository $walletRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+            $wallet = $user->getWallet();
+            if ($wallet) {
+                $walletRepository->remove($wallet, true);
+            }
             $userRepository->remove($user, true);
         }
-
+    
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
-}
+}    
