@@ -1,0 +1,38 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Charitycategory index{% endblock %}
+
+{% block body %}
+    <h1>Charitycategory index</h1>
+
+    <div class="table-responsive">
+  <table class="table table-primary align-middle" style="border-collapse: collapse; width: 100%; max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif;">
+    <thead class="table table-dark" style="background-color: #333; color: #fff;">
+            <tr>
+                <th>Id</th>
+                <th>Type</th>
+                <th>DateCharity</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for charitycategory in charitycategories %}
+            <tr>
+                <td>{{ charitycategory.id }}</td>
+                <td>{{ charitycategory.Type }}</td>
+                <td>{{ charitycategory.DateCharity ? charitycategory.DateCharity|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_charitycategory_show', {'id': charitycategory.id}) }}">show</a>
+                    <a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_charitycategory_edit', {'id': charitycategory.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_charitycategory_new') }}">Create new</a>
+{% endblock %}

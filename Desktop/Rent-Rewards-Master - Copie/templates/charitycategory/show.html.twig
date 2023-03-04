@@ -1,0 +1,31 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Charitycategory{% endblock %}
+
+{% block body %}
+    <h1>Charitycategory</h1>
+
+    <div class="table-responsive">
+		<table class="table table-primary align-middle">
+			<thead class="table table-dark">
+            <tr>
+                <th>Id</th>
+                <td>{{ charitycategory.id }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ charitycategory.Type }}</td>
+            </tr>
+            <tr>
+                <th>DateCharity</th>
+                <td>{{ charitycategory.DateCharity ? charitycategory.DateCharity|date('Y-m-d') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_charitycategory_index') }}">back to list</a>
+
+    <a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_charitycategory_edit', {'id': charitycategory.id}) }}">edit</a>
+
+    {{ include('charitycategory/_delete_form.html.twig') }}
+{% endblock %}

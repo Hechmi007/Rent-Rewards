@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rent reward-Donation
+{% endblock %}
+{% block s %}
+	<link rel="preconnect" href="{{ asset('https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap')}}">
+{% endblock %}
+
+{% block body %}
+
+	{% if app.request.method == 'POST' and app.request.request.get('donate') == 'true' %}
+		{# Perform action when the button is clicked #}
+
+		<center>
+			<h1 style="font-family: 'Caveat', cursive; font-size: 16px; ">
+				"Your donation has made a life-saving impact for someone in need. Thank you for your generosity and support."</h1>
+		</center>
+
+		<center><img src="{{ asset('/uploads/images/' ~ charity_demand.FileUpload) }}" style="width: 20%; height: auto;">
+		</center>
+	{% endif %}
+
+	<h1>Create new Donation</h1>
+
+	{{ include('donation/_form.html.twig') }}
+
+	{# <br>
+	<a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_donation_index') }}">back to list</a>
+	<br> #}
+{% endblock %}
