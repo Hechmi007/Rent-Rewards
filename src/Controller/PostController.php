@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Controller;
-
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use App\Entity\Comment;
 use App\Entity\Post;
 use App\Entity\CommentLike;
@@ -26,7 +27,11 @@ use Symfony\Component\Security\Core\Security;
 #[Route('/post')]
 class PostController extends AbstractController
 {
+
     
+
+
+
     #[Route('/indexadmin', name: 'app_post_indexadmin', methods: ['GET'])]
     public function indexadmin(PostRepository $postRepository, Security $security): Response
     {
@@ -53,6 +58,7 @@ class PostController extends AbstractController
     requirements: ['page' => '\d+', 'sort' => '(date_asc|date_desc|title_asc|title_desc|rating_desc|comments_desc)'])]
     public function showall(PostRepository $postRepository,$page,$sort,Request $request): Response
     {
+        $page = $request->attributes->get('page', 1);
             $showAllForm = $this->createForm(AppShowAllFormType::class, null, [
             
             
@@ -61,6 +67,7 @@ class PostController extends AbstractController
         
             if ($showAllForm->isSubmitted() && $showAllForm->isValid()) {
                 $nbr = $showAllForm->getData()['nbr'];
+                $page=1;
                 // Use $nbr to paginate your results
             }else{
                 $nbr = 10;
@@ -70,7 +77,7 @@ class PostController extends AbstractController
         
 
         //get parameters from the query string
-        $page = $request->attributes->get('page', 1);
+        
     //$nbr = $request->attributes->get('nbr', 10);
     $sort = $request->attributes->get('sort', 'date_desc');
        //$sort = $request->query->get('sort','date_desc');
@@ -202,11 +209,10 @@ class PostController extends AbstractController
         
     }
     #[Route('/{id}', name: 'app_post_show', methods: ['GET', 'POST'])]
-    public function show(Request $request, Post $post,Security $security): Response
+    public function show(Request $request, Post $post,Security $security, CommentRepository $CommentRepository, HttpClientInterface $httpClient): Response
     {
        
     
-        $CommentRepository = $this->getDoctrine()->getRepository(Comment::class);
 
         $comment= new Comment();
         $commentform = $this->createForm(CommentType::class, $comment);
@@ -217,15 +223,37 @@ class PostController extends AbstractController
             $comment->setUpvotes(0);
             $comment->setCreatedatcomment(new DateTime());
             $comment->setUsername($security->getUser());
-            $CommentRepository->save($comment, true);
+            //filter for bad words:
+                $content = $comment->getContentcomment();
+                $response = $httpClient->request('GET', 'https://neutrinoapi.net/bad-word-filter', [
+                    'query' => [
+                        'content' => $content
+                    ],
+                    'headers' => [
+                        'User-ID' => '007007',
+                        'API-Key' => 'SDP4TUoFlxnmnSHz6kTHBD33OOwgMOO4aWwiE1eaL9MiQ6Aw',
+                    ]
+                ]);
+        
+                if ($response->getStatusCode() === 200) {
+                    $result = $response->toArray();
+                    if ($result['is-bad']) {
+                        // Handle bad word found
+                        $this->addFlash('danger', '</i>Your comment contains inappropriate language and cannot be posted.');
+                        return $this->redirectToRoute('app_post_show', ['id' => $post->getId()], Response::HTTP_SEE_OTHER);
+                    } else {
+                        // Save comment
+                        $this->addFlash('success', 'Your comment has been posted.');
 
-            
-           /*  $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($comment);
-            $entityManager->flush(); */
-
-            return $this->redirectToRoute('app_post_show', ['id' => $post->getId()], Response::HTTP_SEE_OTHER);
-        }
+                        $CommentRepository->save($comment, true);
+                        return $this->redirectToRoute('app_post_show', ['id' => $post->getId()], Response::HTTP_SEE_OTHER);
+                    }
+                } else {
+                    // Handle API error
+                    
+                    return new Response("Error processing request", Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+            }
         if($post->isVisible() == false){
             return $this->redirectToRoute('app_show_all', [], Response::HTTP_SEE_OTHER);
         }

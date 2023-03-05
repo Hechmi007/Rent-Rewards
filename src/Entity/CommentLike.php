@@ -13,10 +13,10 @@ class CommentLike
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'commentLikes')]
+    #[ORM\ManyToOne(inversedBy: 'commentLikes', targetEntity: Comment::class )]
     private ?Comment $comment = null;
 
-    #[ORM\ManyToOne(inversedBy: 'commentLikes')]
+    #[ORM\ManyToOne(inversedBy: 'commentLikes', targetEntity: User::class )]
     private ?User $user = null;
 
     #[ORM\Column(length: 255, nullable: true)]

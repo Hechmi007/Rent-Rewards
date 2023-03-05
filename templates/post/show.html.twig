@@ -81,6 +81,7 @@
         <i class="bi bi-twitter"></i>
       </a>
     </li>
+      
                   {% if post.username == user.username %}
                     <li class="d-flex align-items-center"><i class="bi bi-pencil-fill"></i>
                        <a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a></li>
@@ -228,6 +229,15 @@ document.querySelectorAll('a.js-like').forEach(function(link) {
                  {{ form_start(comment_form,{'attr':{'novalidate':'novalidate'}}) }}
                   <div class="row">
                     {{form_label(comment_form.contentcomment,'Give feedback on the post and remember to be polite')}}  
+                  </div>
+                  <div class="row">
+                  {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ label }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
                   </div>
                   <div class="row">
                     <div class="col form-group">

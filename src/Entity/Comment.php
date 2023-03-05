@@ -36,7 +36,7 @@ class Comment
     #[ORM\JoinColumn(nullable: false)]
     private ?User $username;
 
-    #[ORM\OneToMany(mappedBy: 'comment', targetEntity: CommentLike::class)]
+    #[ORM\OneToMany(mappedBy: 'comment', targetEntity: CommentLike::class, orphanRemoval: true, cascade: ['remove'])]
     private Collection $commentLikes;
 
     public function __construct()
