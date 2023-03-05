@@ -58,12 +58,12 @@ class ProductsController extends AbstractController
     }
 
     #[Route('/{id}/pdf', name: 'app_products_pdf', methods: ['GET'])]
-    public function pdf($id,ProductsRepository $ProductsRepository): Response {
+    public function pdf($id,Products $product): Response {
 
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFront', 'Arial');
         $dompdf = new Dompdf($pdfOptions);
-        $html = $this->renderView('products/facture.html.twig', ['products' => $ProductsRepository->find($id),]);
+        $html = $this->renderView('products/facture.html.twig', ['product' => $product]);
         $dompdf->loadHtml($html); 
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();

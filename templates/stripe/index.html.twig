@@ -29,7 +29,7 @@
                             <div id="card-element" class="form-control" ></div>
                             <button 
                                 id='pay-btn'
-                                class="btn btn-success mt-3"
+                                class="btn btn-primary mt-3"
                                 type="button"
                                 style="margin-top: 20px; width: 100%;padding: 7px;"
                                 onclick="createToken()">Rent Now
@@ -45,6 +45,7 @@
     <script>
         var stripe = Stripe("pk_test_51MflpGDLCN7wpLip2ppNx4uRkFzMGC13KAx94BfIIZZifjOOLKFGbuDzlOtqbL1WwfKcpcoeUacAO6wTcGPQTlOE006y87G2tv");
         var elements = stripe.elements();
+        
         var cardElement = elements.create('card');
         cardElement.mount('#card-element');
      

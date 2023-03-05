@@ -1,7 +1,7 @@
 {% block body %}
     <h6>Tunis le {{ 'now'|date('d - m -Y') }}</h6>
     <h5 style="color:#03AB09"><center>Thanks For Renting With Us</center></h5>
-    <h1 style="color:#09526E"><center>INVOICE N:{{products.id}}</center></h1>
+    <h1 style="color:#09526E"><center>INVOICE N:{{product.id}}</center></h1>
     <table>
         <tbody>
             <tr>
@@ -10,27 +10,27 @@
             </tr>
             <tr>
                 <th style="width:50%;border-width:1px;border-style:solid;border-color:#000000;color:#037DAB;"> Product REF:</th>
-                <td style="width:50%;border-width:1px;border-style:solid;border-color:#000000;"> {{ products.id }}</td>
+                <td style="width:50%;border-width:1px;border-style:solid;border-color:#000000;"> {{ product.id }}</td>
             </tr>
             <tr>
                 <th style="width:50%;border-width:1px;border-style:solid;border-color:#000000;color:#037DAB;"> Product Name:</th>
-                <td style="width:50%;border-width:1px;border-style:solid;border-color:#000000;"> {{ products.productname }}</td>
+                <td style="width:50%;border-width:1px;border-style:solid;border-color:#000000;"> {{ product.productname }}</td>
             </tr>
             <tr>
                 <th style="width:50%;border-width:1px;border-style:solid;border-color:#000000;color:#037DAB;"> Renting Date:</th>
-                <td style="width:50%;border-width:1px;border-style:solid;border-color:#000000;"> {{ products.Availabilitydate ? products.Availabilitydate|date('d - m -Y') : '' }}</td>
+                <td style="width:50%;border-width:1px;border-style:solid;border-color:#000000;"> {{ product.Availabilitydate ? product.Availabilitydate|date('d - m -Y') : '' }}</td>
             </tr>
             <tr>
                 <th style="width:50%;border-width:1px;border-style:solid;border-color:#000000;color:#037DAB;"> Product Type:</th>
-                <td style="width:50%;border-width:1px;border-style:solid;border-color:#000000;"> {{ products.ProductType }}</td>
+                <td style="width:50%;border-width:1px;border-style:solid;border-color:#000000;"> {{ product.ProductType }}</td>
             </tr>
             <tr>
                 <th style="width:50%;border-width:1px;border-style:solid;border-color:#000000;color:#037DAB;"> Product Adress:</th>
-                <td style="width:50%;border-width:1px;border-style:solid;border-color:#000000;"> {{ products.ProductAdress }}</td>
+                <td style="width:50%;border-width:1px;border-style:solid;border-color:#000000;"> {{ product.ProductAdress }}</td>
             </tr>
             <tr>
                 <th style="width:50%;border-width:1px;border-style:solid;border-color:#000000;color:#037DAB;"> Digital Item:</th>
-                <td style="width:50%;border-width:1px;border-style:solid;border-color:#000000;"> {{ products.StillAvailable ? 'Yes' : 'No' }}</td>
+                <td style="width:50%;border-width:1px;border-style:solid;border-color:#000000;"> {{ product.StillAvailable ? 'Yes' : 'No' }}</td>
             </tr>
 
         </tbody>
@@ -46,7 +46,7 @@
             </tr>
             <tr>
                 <th style="color:#037DAB;">Subtotal:</th>
-                <td>{{ products.RentPrice }} TND</td>
+                <td>{{ product.RentPrice }} TND</td>
             </tr>
             <tr>
                 <th style="color:#DF1919">TVA :</th>
@@ -54,7 +54,7 @@
             </tr>
             <tr>
                 <th>Total:</th>
-                <td>{{ products.RentPrice + (products.RentPrice * 19) / 100 }} TND</td>
+                <td>{{ product.RentPrice + (product.RentPrice * 19) / 100 }} TND</td>
             </tr>
         </tbody>
         </table>
