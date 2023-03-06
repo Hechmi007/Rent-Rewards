@@ -59,7 +59,8 @@
               <img src="{{ vich_uploader_asset(post, 'imageFile') }}" alt="Post Image">
               
               </div>
-
+              
+              
               <h2 class="entry-title">
                 <a href="">{{post.title}}</a>
                 
@@ -116,7 +117,16 @@
                 
 
               </div>
-
+              <div class="entry-img mt-4"style="text-align: center;">
+                {% if post.video %}
+                
+                    <video controls>
+                        <source src="{{ vich_uploader_asset(post, 'videoFile') }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                
+                {% endif %}
+              </div>
               <div class="entry-footer">
                 <i class="bi bi-folder"></i>
                 <ul class="cats">
@@ -183,11 +193,11 @@
                       </div>
                       <div class="col-auto">
                         
-        <a href="{{ path('comment_like', {'id':comment.id}) }}" class="btn btn-link js-like"><i class="bi bi-hand-thumbs-up"></i> Like</a>
+        <a href="{{ path('comment_like', {'id':comment.id}) }}" class="btn btn-link js-like"><i class="bi-hand-thumbs-up"></i> Like</a>
 
                       </div>
                       <div class="col-auto">
-                        <a href="#" class="btn btn-link"><i class="bi bi-hand-thumbs-down"></i> Dislike</a>
+                        <a href="#" class="btn btn-link"><i class="bi-hand-thumbs-down"></i> Dislike</a>
                       </div>
                     </div>
                   </div>
@@ -198,29 +208,30 @@
 
             <script>
           function onClickBtnLike(event) {
-  event.preventDefault();
-  const commentId = this.dataset.commentId; // Get the comment ID from the dataset
-  const likesCount = document.querySelector(`#comment-${commentId} p.likes-count`); // Use the unique ID to get the likes count element
-  const icon = this.querySelector('i.bi.bi-hand-thumbs-up'); // Get the thumb icon element
+          event.preventDefault();
+          const commentId = this.dataset.commentId; // Get the comment ID from the dataset
+          const likesCount = document.querySelector(`#comment-${commentId} p.likes-count`); // Use the unique ID to get the likes count element
+          let icon = this.querySelector('i.bi-hand-thumbs-up'); // Get the thumb icon element
+          (icon==null)?icon=this.querySelector('i.bi-hand-thumbs-up-fill'):icon; // Get the thumb icon element
+          axios.get(this.href).then(function(response) {
+            const likes = response.data.likes;
+            likesCount.textContent = `${likes} Likes`; // Update the likes count text
+            console.log(icon)
+            if (response.data.message == 'like added') {
+              icon.classList.replace('bi-hand-thumbs-up', 'bi-hand-thumbs-up-fill'); // Replace the thumb icon
+            } else {
+              icon.classList.replace('bi-hand-thumbs-up-fill', 'bi-hand-thumbs-up'); // Replace the thumb icon
+            } 
+            console.log(response.data);
+                }).catch(function(error) {
+                  console.log(error);
+                });
+              }
 
-  axios.get(this.href).then(function(response) {
-    const likes = response.data.likes;
-    likesCount.textContent = `${likes} Likes`; // Update the likes count text
-    if (icon.classList.contains('bi-hand-thumbs-up')) {
-      icon.classList.replace('bi-hand-thumbs-up', 'bi-hand-thumbs-up-fill'); // Replace thumb icon with filled version
-    } else {
-      icon.classList.replace('bi-hand-thumbs-up-fill', 'bi-hand-thumbs-up'); // Replace thumb icon with regular version
-    }
-    console.log(response.data);
-  }).catch(function(error) {
-    console.log(error);
-  });
-}
-
-document.querySelectorAll('a.js-like').forEach(function(link) {
-  link.addEventListener('click', onClickBtnLike);
-  link.dataset.commentId = link.closest('.comment').id.split('-')[1]; // Set the comment ID in the dataset
-});
+              document.querySelectorAll('a.js-like').forEach(function(link) {
+                link.addEventListener('click', onClickBtnLike);
+                link.dataset.commentId = link.closest('.comment').id.split('-')[1]; // Set the comment ID in the dataset
+              });
             </script>
               <div class="reply-form">
                 <h4>Leave a Comment</h4>

@@ -59,8 +59,14 @@ class Post
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedat = null;
 
-    
+    #[ORM\Column(nullable: true)]
+    private ?string $video = null;
 
+    #[Vich\UploadableField(mapping: 'post', fileNameProperty: 'video')]
+    private ?File $videoFile = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $quote = null;
 
     public function __construct()
     {
@@ -68,7 +74,33 @@ class Post
         $this->rating=0;
         $this->comments = new ArrayCollection();
     }
+    public function getVideo(): ?string
+{
+    return $this->video;
+}
 
+public function setVideo(?string $video): self
+{
+    $this->video = $video;
+
+    return $this;
+}
+
+public function getVideoFile(): ?File
+{
+    return $this->videoFile;
+}
+
+public function setVideoFile(?File $videoFile = null): self
+{
+    $this->videoFile = $videoFile;
+
+    if ($videoFile) {
+        $this->updatedat = new \DateTimeImmutable();
+    }
+
+    return $this;
+}
     public function getImageFile(): ?File
     {
         return $this->imageFile;
@@ -229,6 +261,20 @@ class Post
     public function setUpdatedat(?\DateTimeInterface $updatedat): self
     {
         $this->updatedat = $updatedat;
+
+        return $this;
+    }
+
+    
+
+    public function getQuote(): ?string
+    {
+        return $this->quote;
+    }
+
+    public function setQuote(?string $quote): self
+    {
+        $this->quote = $quote;
 
         return $this;
     }

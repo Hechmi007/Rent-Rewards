@@ -31,7 +31,7 @@ class PostType extends AbstractType
             ])
             ->add('content',TextareaType::class, [
                 'attr' => [
-                    'class' => 'form-control-resize col-6 mb-6',
+                    'class' => 'form-control-resize',
                     'id' => 'title',
                     'placeholder' => 'Enter title',
                     
@@ -41,7 +41,19 @@ class PostType extends AbstractType
                 'label' => 'Image',
                 'required' => false, // image is not required
             ])
-            
+            ->add('videoFile', FileType::class, [
+                'label' => 'Video',
+                'required' => false,
+            ])
+            ->add('quote',TextareaType::class, [
+                'attr' => [
+                    'class' => 'form-control-resize col-6 mb-6',
+                    'id' => 'quote',
+                    'placeholder' => 'enter quote',
+                    'required' => false,
+
+                ]
+            ])
             
             
         ;
