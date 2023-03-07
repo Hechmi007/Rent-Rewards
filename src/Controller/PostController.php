@@ -52,7 +52,40 @@ class PostController extends AbstractController
         
     }
 
+    #[Route('/search', name: 'ajax_search_post', methods: ['GET'])]
+    public function searchAction(Request $request,PostRepository $postRepository)
+    {
+      
 
+      $requestString = $request->get('q');
+
+      $posts =  $postRepository->findEntitiesByString($requestString);
+
+      if(!$posts) {
+          $result['posts']['error'] = "No posts found matching your search";
+      } else {
+          $result['posts'] = $this->getRealPosts($posts);
+      }
+
+      return new Response(json_encode($result));
+    }
+
+    public function getRealPosts($posts){
+
+        $realposts = array();
+
+        foreach ($posts as $post){
+            $realposts[$post->getId()] = array(
+                'id' => $post->getId(),
+                'createdat' => $post->getCreatedAt()->format('Y-m-d'),
+                'image' => $post->getImage(),
+                'title' => $post->getTitle()
+                
+            );
+        }
+      
+        return $realposts;
+    }
 
     #[Route('/showall/{page?1}/{sort?date_desc}', name: 'app_show_all', methods: ['GET', 'POST'],
     requirements: ['page' => '\d+', 'sort' => '(date_asc|date_desc|title_asc|title_desc|rating_desc|comments_desc)'])]
@@ -161,7 +194,7 @@ class PostController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $post->setCreatedat(new DateTime());
-            $post->setRating(0);
+            $post->setRating(1);
             $post->setUsername($security->getUser());
             $post->setVisible(true);
             $postRepository->save($post, true);
@@ -265,7 +298,7 @@ class PostController extends AbstractController
             'post' => $post,
             'comments' => $CommentRepository->findBy(['IDPost' => $post->getId()]),
             'comment_form' => $commentform->createView(),
-            'user'=>$security->getUser(),
+            'user' => $security->getUser() 
         ]);
 
     }

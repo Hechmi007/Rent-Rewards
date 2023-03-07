@@ -68,11 +68,15 @@ class Post
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $quote = null;
 
+    #[ORM\OneToMany(mappedBy: 'reportedPost', targetEntity: Report::class, orphanRemoval: true)]
+    private Collection $reports;
+
     public function __construct()
     {
         $this->createdat = new DateTime();
         $this->rating=0;
         $this->comments = new ArrayCollection();
+        $this->reports = new ArrayCollection();
     }
     public function getVideo(): ?string
 {
@@ -275,6 +279,36 @@ public function setVideoFile(?File $videoFile = null): self
     public function setQuote(?string $quote): self
     {
         $this->quote = $quote;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Report>
+     */
+    public function getReports(): Collection
+    {
+        return $this->reports;
+    }
+
+    public function addReport(Report $report): self
+    {
+        if (!$this->reports->contains($report)) {
+            $this->reports->add($report);
+            $report->setReportedPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReport(Report $report): self
+    {
+        if ($this->reports->removeElement($report)) {
+            // set the owning side to null (unless already changed)
+            if ($report->getReportedPost() === $this) {
+                $report->setReportedPost(null);
+            }
+        }
 
         return $this;
     }

@@ -48,7 +48,16 @@ class PostRepository extends ServiceEntityRepository
         
         return $qb->getQuery()->getResult();
     }
-
+    public function findEntitiesByString($str){
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT e
+                FROM App\Entity\Post e
+                WHERE e.title LIKE :str OR e.content LIKE :str'
+            )
+            ->setParameter('str', '%'.$str.'%')
+            ->getResult();
+    }
 
     
 //    /**

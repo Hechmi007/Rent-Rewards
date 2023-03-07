@@ -5,6 +5,7 @@ use App\Repository\PostRepository;
 
 use App\Entity\Post;
 use App\Repository\CreditRepository;
+use App\Repository\ReportRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,27 +21,28 @@ class DashboardController extends AbstractController
             'controller_name' => 'DashboardController',
         ]);
     }
-    #[Route('/postback', name: 'app_dashboard_post', methods: ['GET'])]
-    public function posts(PostRepository $postRepository): Response
-    {
-        return $this->render('dashboard/post.html.twig', [
-            'posts' => $postRepository->findAll(),
-        ]);
-    }
-    #[Route('/toggle_visibility/{id}', name: 'app_toggle_visibility', methods: ['POST'])]
-    public function toggleVisibility(Post $post): Response
+    
+    #[Route('/toggle_visibility/{id}/{back?app_dashboard_post}', name: 'app_toggle_visibility', methods: ['POST'])]
+    public function toggleVisibility(Post $post,$back): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
         $post->setVisible(!$post->isVisible());
         $entityManager->persist($post);
         $entityManager->flush();
-        return $this->redirectToRoute('app_dashboard_post', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute($back, [], Response::HTTP_SEE_OTHER);
     }
-    #[Route('/creditback', name: 'app_dashboard_credit', methods: ['GET'])]
-    public function credits(CreditRepository $creditRepository): Response
+    #[Route('/reportback', name: 'app_dashboard_report', methods: ['GET'])]
+    public function report(ReportRepository $reportRepository): Response
     {
-        return $this->render('dashboard/credit.html.twig', [
-            'credits' => $creditRepository->findAll(),
+        return $this->render('dashboard/report.html.twig', [
+            'reports' => $reportRepository->findAll(),
+        ]);
+    }
+    #[Route('/postback', name: 'app_dashboard_post', methods: ['GET'])]
+    public function posts(PostRepository $postRepository): Response
+    {
+        return $this->render('dashboard/post.html.twig', [
+            'posts' => $postRepository->findAll(),
         ]);
     }
 }

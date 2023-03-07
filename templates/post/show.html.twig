@@ -63,7 +63,66 @@
               
               <h2 class="entry-title">
                 <a href="">{{post.title}}</a>
-                
+                <style>
+        
+    </style>
+    {% for i in 1..post.rating %}
+    <i class="bi bi-star-fill" style="color: #ffe234;"></i>
+       
+    {% endfor %}
+    {% for i in 1..(5-post.rating) %}
+
+    <i class="bi bi-star"></i>
+    {% endfor %}
+               
+    <i class="note"></i>
+                <script>
+        const stars = document.querySelectorAll('.star');
+        let check = false;
+        stars.forEach(star => {
+            star.addEventListener('mouseover', selectStars);
+            star.addEventListener('mouseleave', unselectStars);
+            star.addEventListener('click', activeSelect);
+        })
+
+        function selectStars(e) {
+            const data = e.target;
+            const etoiles = priviousSiblings(data);
+            if (!check) {
+                etoiles.forEach(etoile => {
+                    etoile.classList.add('hover');
+                })
+            }
+
+        }
+
+        function unselectStars(e) {
+            const data = e.target;
+            const etoiles = priviousSiblings(data);
+            if (!check) {
+                etoiles.forEach(etoile => {
+                    etoile.classList.remove('hover');
+                })
+            }
+        }
+
+        function activeSelect(e) {
+            if (!check) {
+                check = true;
+                document.querySelector('.note').innerHTML = 'Note ' + e.target.dataset.note;
+            }
+        }
+
+        function priviousSiblings(data) {
+            let values = [data];
+            while (data = data.previousSibling) {
+                if (data.nodeName === 'I') {
+                    values.push(data);
+                }
+            }
+            return values;
+        }
+    </script>
               </h2>
 
               <div class="entry-meta">
@@ -72,34 +131,35 @@
                   <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="blog-single.html">{{post.username}}</a></li>
                   <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="blog-single.html"><time datetime="2020-01-01">{{ post.createdat ? post.createdat|date('Y-m-d') : '' }}</time></a></li>
                   <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="blog-single.html">{{comments|length}} Comments</a></li>
-                  <li class="d-flex align-items-center"><a href="https://www.facebook.com/sharer/sharer.php?u={{ app.request.uri }}&amp;quote=Check+out+this+awesome+post" target="_blank">
-                    <i class="bi bi-facebook"></i>
-                    </a>
-                  </li>
-                 
-                   <li class="d-flex align-items-center">
+                  <li class="d-flex align-items-center"><a href="https://www.facebook.com/sharer/sharer.php?u={{ app.request.uri }}&amp;quote=Check+out+this+awesome+post" target="_blank"><i class="bi bi-facebook"></i></a>
+                  </li> 
+                 <li class="d-flex align-items-center">
       <a href="https://twitter.com/intent/tweet?url={{ app.request.uri }}&amp;text=Check+out+this+awesome+post" target="_blank">
         <i class="bi bi-twitter"></i>
       </a>
     </li>
-      
-                  {% if post.username == user.username %}
-                    <li class="d-flex align-items-center"><i class="bi bi-pencil-fill"></i>
-                       <a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a></li>
-                    
-                    <li class="d-flex align-items-center">
-                    <i class="bi bi-trash3-fill"></i>
-                    <form method="post" action="{{ path('app_post_delete', {'id': post.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
-                        <button class="btn"><u>Delete</u></button>
-                    </form>
+                      <li class="d-flex align-items-center"><a href="https://www.reddit.com/submit?url={{ app.request.uri }}&title=Check out this awesome Post on www.rentrewards.com" target="_blank"><i class="bi bi-reddit"></i></a>
+                  </li>
+                  <li class="d-flex align-items-center"><a href="{{ path('app_report_new', {'id': post.id}) }}"><i class="bi bi-flag-fill"></i></a> report</li>
+                  {% if user %}
+                    {% if post.username == user.username %}
+                      <li class="d-flex align-items-center"><i class="bi bi-pencil-fill"></i>
+                        <a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a></li>
+                      
+                      <li class="d-flex align-items-center">
+                      <i class="bi bi-trash3-fill"></i>
+                      <form method="post" action="{{ path('app_post_delete', {'id': post.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                          <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                          <button class="btn"><u>Delete</u></button>
+                      </form>
 
-                    {# <form method="post" action="{{ path('app_post_delete', {'id': post.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
-                        <button class="btn">Delete</button>
-                    </form> #}
+                      {# <form method="post" action="{{ path('app_post_delete', {'id': post.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                          <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                          <button class="btn">Delete</button>
+                      </form> #}
 
-                    </li>
+                      </li>
+                    {% endif %}
                   {% endif %}
                 </ul>
               </div>
@@ -109,10 +169,10 @@
                     {{post.content}}
                 </p>
                 {% if post.quote is defined %}
-    <blockquote>
-        <p>{{ post.quote }}</p>
-    </blockquote>
-{% endif %}
+                    <blockquote>
+                        <p>{{ post.quote }}</p>
+                    </blockquote>
+                {% endif %}
                 
                 
 
@@ -172,6 +232,7 @@
                         <h5><a href="">{{comment.username.getUsername()}}</a></h5>
                       </div>
                       <div class="col-auto">
+                      {% if user %}
                         {% if user.username == comment.username.getUsername() %}
                         <form method="POST" action="{{ path('app_comment_delete', {'id': comment.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
                           <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
@@ -180,6 +241,7 @@
                         {% else %}
                         <a href="#" class="reply"><i class="bi bi-reply-fill"></i> reply</a>
                         {% endif %}
+                      {% endif %}
                       </div>
                     </div>
                     <time datetime="{{ comment.createdatcomment|date('Y-m-d') }}">
@@ -272,32 +334,80 @@
 
           <div class="col-lg-4">
 
-            <div class="sidebar">
 
+
+
+            <div class="sidebar">
               <h3 class="sidebar-title">Search</h3>
               <div class="sidebar-item search-form">
                 <form action="">
-                  <input type="text">
+                  <input type="text" id="search" class="form-control" placeholder="Search posts ...">
                   <button type="submit"><i class="bi bi-search"></i></button>
                 </form>
-                
-
               </div><!-- End sidebar search formn-->
 
-              <h3 class="sidebar-title">Categories</h3>
-              <div class="sidebar-item categories">
-                <ul>
-                  <li><a href="#">General <span>(25)</span></a></li>
-                  <li><a href="#">Lifestyle <span>(12)</span></a></li>
-                  <li><a href="#">Travel <span>(5)</span></a></li>
-                  <li><a href="#">Design <span>(22)</span></a></li>
-                  <li><a href="#">Creative <span>(8)</span></a></li>
-                  <li><a href="#">Educaion <span>(14)</span></a></li>
-                </ul>
-              </div><!-- End sidebar categories-->
+             
+                 
+                
+              <!-- End sidebar search formn-->
 
-              <h3 class="sidebar-title">Recent Posts</h3>
-              <div class="sidebar-item recent-posts">
+
+{#             search scripts
+ #}
+              <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
+              <script type="text/javascript">
+                jQuery(document).ready(function() {
+                var searchRequest = null;
+                $("#search").keyup(function() {
+                    var minlength = 2;
+                    var that = this;
+                    var value = $(this).val();
+                    var entitySelector = $("#entitiesNav").html('');
+                    var postContainer = $('#recent-posts').html('');
+                    var searchTitle = $('#search-title').html('Search results for: ' + value);
+                    if (value.length >= minlength ) {
+                        if (searchRequest != null)
+                            searchRequest.abort();
+                            searchRequest = $.ajax({
+                            type: "GET",
+                            url: "{{ path('ajax_search_post') }}",
+                            data: {
+                                'q' : value
+                            },
+                            dataType: "text",
+                            success: function(msg){
+                              
+                                //we need to check if the value is the same
+                                if (value==$(that).val()) {
+                                    var result = JSON.parse(msg);
+                                    $.each(result, function(key, arr) {
+                                      $.each(arr, function(id, value) {
+                                          if (key == 'posts') { // assuming the posts are in a property called 'posts'
+                                              if (id != 'error') {
+                                                  // create the post item and append it to the container
+                                                  console.log(value);
+                                                  var postItem = $('<div class="post-item clearfix">').appendTo(postContainer);
+                                                  $('<img>').attr('src', '/images/post/' + value.image).appendTo(postItem);
+                                                  $('<h4>').html('<a href="/daten/'+id+'">'+value.title+'</a>').appendTo(postItem);
+                                                  $('<time>').attr('datetime', value.createdat).text(value.createdat).appendTo(postItem);
+                                              } else {
+                                                  postContainer.append('<li class="errorLi">'+value+'</li>');
+                                              }
+                                          }
+                                      });
+                                  });
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+
+
+              </script>
+
+              <h3 class="sidebar-title" id="search-title">Recent Posts</h3>
+              <div class="sidebar-item recent-posts" id="recent-posts">
                 <div class="post-item clearfix">
                   <img src="{{ asset('assets/img/blog/blog-recent-1.jpg') }}" alt="">
                   <h4><a href="blog-single.html">Nihil blanditiis at in nihil autem</a></h4>
@@ -329,6 +439,19 @@
                 </div>
 
               </div><!-- End sidebar recent posts-->
+              <h3 class="sidebar-title">Categories</h3>
+              <div class="sidebar-item categories">
+                <ul>
+                  <li><a href="#">General <span>(25)</span></a></li>
+                  <li><a href="#">Lifestyle <span>(12)</span></a></li>
+                  <li><a href="#">Travel <span>(5)</span></a></li>
+                  <li><a href="#">Design <span>(22)</span></a></li>
+                  <li><a href="#">Creative <span>(8)</span></a></li>
+                  <li><a href="#">Educaion <span>(14)</span></a></li>
+                </ul>
+              </div><!-- End sidebar categories-->
+
+              
 
               <h3 class="sidebar-title">Tags</h3>
               <div class="sidebar-item tags">
@@ -354,9 +477,7 @@
         </div>
 
       </div>
-    </section><!-- End Blog Single Section -->
-
-  
-
-
+    </div><!-- End Blog Section -->
+</div>
+  <!-- End #main -->
 {% endblock %}

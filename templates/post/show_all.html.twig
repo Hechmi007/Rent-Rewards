@@ -134,6 +134,14 @@
 
               <h2 class="entry-title">
                 <a href="{{ path('app_post_show', {'id': post.id}) }}">{{post.title}}</a>
+                {% for i in 1..post.rating %}
+    <i class="bi bi-star-fill" style="color: #ffe234;"></i>
+       
+    {% endfor %}
+    {% for i in 1..(5-post.rating) %}
+
+    <i class="bi bi-star"></i>
+    {% endfor %}
               </h2>
 
               <div class="entry-meta">
@@ -197,34 +205,80 @@
           
           <div class="col-lg-4">
 
-            <div class="sidebar">
 
+
+
+            <div class="sidebar">
               <h3 class="sidebar-title">Search</h3>
               <div class="sidebar-item search-form">
-                
-                {{ form_start(searchForm) }}
-                  
-                {{ form_widget(searchForm.search) }}
-                  
+                <form action="">
+                  <input type="text" id="search" class="form-control" placeholder="Search posts ...">
                   <button type="submit"><i class="bi bi-search"></i></button>
-                {{ form_end(searchForm) }} 
-                
+                </form>
               </div><!-- End sidebar search formn-->
 
-              <h3 class="sidebar-title">Categories</h3>
-              <div class="sidebar-item categories">
-                <ul>
-                  <li><a href="#">General <span>(25)</span></a></li>
-                  <li><a href="#">Lifestyle <span>(12)</span></a></li>
-                  <li><a href="#">Travel <span>(5)</span></a></li>
-                  <li><a href="#">Design <span>(22)</span></a></li>
-                  <li><a href="#">Creative <span>(8)</span></a></li>
-                  <li><a href="#">Educaion <span>(14)</span></a></li>
-                </ul>
-              </div><!-- End sidebar categories-->
+             
+                 
+                
+              <!-- End sidebar search formn-->
 
-              <h3 class="sidebar-title">Recent Posts</h3>
-              <div class="sidebar-item recent-posts">
+
+{#             search scripts
+ #}
+              <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
+              <script type="text/javascript">
+                jQuery(document).ready(function() {
+                var searchRequest = null;
+                $("#search").keyup(function() {
+                    var minlength = 2;
+                    var that = this;
+                    var value = $(this).val();
+                    var entitySelector = $("#entitiesNav").html('');
+                    var postContainer = $('#recent-posts').html('');
+                    var searchTitle = $('#search-title').html('Search results for: ' + value);
+                    if (value.length >= minlength ) {
+                        if (searchRequest != null)
+                            searchRequest.abort();
+                            searchRequest = $.ajax({
+                            type: "GET",
+                            url: "{{ path('ajax_search_post') }}",
+                            data: {
+                                'q' : value
+                            },
+                            dataType: "text",
+                            success: function(msg){
+                              
+                                //we need to check if the value is the same
+                                if (value==$(that).val()) {
+                                    var result = JSON.parse(msg);
+                                    $.each(result, function(key, arr) {
+                                      $.each(arr, function(id, value) {
+                                          if (key == 'posts') { // assuming the posts are in a property called 'posts'
+                                              if (id != 'error') {
+                                                  // create the post item and append it to the container
+                                                  console.log(value);
+                                                  var postItem = $('<div class="post-item clearfix">').appendTo(postContainer);
+                                                  $('<img>').attr('src', '/images/post/' + value.image).appendTo(postItem);
+                                                  $('<h4>').html('<a href="/daten/'+id+'">'+value.title+'</a>').appendTo(postItem);
+                                                  $('<time>').attr('datetime', value.createdat).text(value.createdat).appendTo(postItem);
+                                              } else {
+                                                  postContainer.append('<li class="errorLi">'+value+'</li>');
+                                              }
+                                          }
+                                      });
+                                  });
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+
+
+              </script>
+
+              <h3 class="sidebar-title" id="search-title">Recent Posts</h3>
+              <div class="sidebar-item recent-posts" id="recent-posts">
                 <div class="post-item clearfix">
                   <img src="{{ asset('assets/img/blog/blog-recent-1.jpg') }}" alt="">
                   <h4><a href="blog-single.html">Nihil blanditiis at in nihil autem</a></h4>
@@ -256,6 +310,19 @@
                 </div>
 
               </div><!-- End sidebar recent posts-->
+              <h3 class="sidebar-title">Categories</h3>
+              <div class="sidebar-item categories">
+                <ul>
+                  <li><a href="#">General <span>(25)</span></a></li>
+                  <li><a href="#">Lifestyle <span>(12)</span></a></li>
+                  <li><a href="#">Travel <span>(5)</span></a></li>
+                  <li><a href="#">Design <span>(22)</span></a></li>
+                  <li><a href="#">Creative <span>(8)</span></a></li>
+                  <li><a href="#">Educaion <span>(14)</span></a></li>
+                </ul>
+              </div><!-- End sidebar categories-->
+
+              
 
               <h3 class="sidebar-title">Tags</h3>
               <div class="sidebar-item tags">
