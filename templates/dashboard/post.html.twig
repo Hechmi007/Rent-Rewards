@@ -200,11 +200,14 @@
             <div class="container-fluid pt-4 px-4">
                 <div class="bg-light text-center rounded p-4">
                     <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h6 class="mb-0">Recent Salse</h6>
-                        <a href="">Show All</a>
+                        <h6 class="mb-0">Posts</h6>
+                        <form class="search-container">
+                            <input class="form-control border-0" type="search" placeholder="Search" id="myInput" >
+                        </form>
                     </div>
+
                     <div class="table-responsive">
-                        <table class="table text-start align-middle table-striped table-bordered table-hover mb-0">
+                        <table  id="mytable" class="table text-start align-middle table-striped table-bordered table-hover mb-0">
                             <thead>
                                 <tr class="text-dark">
                                     <th scope="col">#ID</th>
@@ -216,7 +219,7 @@
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="myTable">
                             {% for post in posts %}
                                 <tr>
                                     <td>{{post.id}}</td>
@@ -253,9 +256,21 @@
 
                             </tbody>
                         </table>
+                        
                     </div>
                 </div>
             </div>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                        <script>
+                        $(document).ready(function() {
+                            $("#myInput").on("keyup", function() {
+                                var value = $(this).val().toLowerCase();
+                                $("#myTable tr").filter(function() {
+                                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                                });
+                            });
+                        });
+                        </script>
             <!-- Recent Sales End -->
 
 

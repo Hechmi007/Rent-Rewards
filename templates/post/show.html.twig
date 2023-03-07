@@ -75,54 +75,8 @@
     <i class="bi bi-star"></i>
     {% endfor %}
                
-    <i class="note"></i>
-                <script>
-        const stars = document.querySelectorAll('.star');
-        let check = false;
-        stars.forEach(star => {
-            star.addEventListener('mouseover', selectStars);
-            star.addEventListener('mouseleave', unselectStars);
-            star.addEventListener('click', activeSelect);
-        })
-
-        function selectStars(e) {
-            const data = e.target;
-            const etoiles = priviousSiblings(data);
-            if (!check) {
-                etoiles.forEach(etoile => {
-                    etoile.classList.add('hover');
-                })
-            }
-
-        }
-
-        function unselectStars(e) {
-            const data = e.target;
-            const etoiles = priviousSiblings(data);
-            if (!check) {
-                etoiles.forEach(etoile => {
-                    etoile.classList.remove('hover');
-                })
-            }
-        }
-
-        function activeSelect(e) {
-            if (!check) {
-                check = true;
-                document.querySelector('.note').innerHTML = 'Note ' + e.target.dataset.note;
-            }
-        }
-
-        function priviousSiblings(data) {
-            let values = [data];
-            while (data = data.previousSibling) {
-                if (data.nodeName === 'I') {
-                    values.push(data);
-                }
-            }
-            return values;
-        }
-    </script>
+    
+    
               </h2>
 
               <div class="entry-meta">
@@ -177,10 +131,10 @@
                 
 
               </div>
+
               <div class="entry-img mt-4"style="text-align: center;">
                 {% if post.video %}
-                
-                    <video controls>
+<iframe width="560" height="315" src="https://www.youtube.com/watch?v=slcj0TWFkgk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>                    <video controls>
                         <source src="{{ vich_uploader_asset(post, 'videoFile') }}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>

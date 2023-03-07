@@ -1,11 +1,76 @@
-{% extends 'base.html.twig' %}
+{% extends 'base2.html.twig' %}
 
-{% block title %}New Credit{% endblock %}
+{% block title %}User index{% endblock %}
 
 {% block body %}
-    <h1>Create new Credit</h1>
+<h1>User index</h1>
+<form class="search-container">
+    <input class="form-control border-0" type="search" placeholder="Search" id="myInput" >
+</form>
+<div class="table-responsive">
+    <table class="table table-primary align-middle" id="mytable">
+        <thead class="table table-dark">
+            <tr>
+                <th>Id</th>
+                <th>Username</th>
+                <th>Roles</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>actions</th>
+                <th>Status</th>
+                <th>Ban/Unban</th>
+            </tr>
+        </thead>
+        <tbody id="myTable">
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.roles ? user.roles|join(', ') : '' }}</td>
+                <td>{{ user.email }}</td>
+                <td>*****</td>
+                <td>
+                    <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
+                    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+                </td>
+                <td>
+                    {% if user.banned %}
+                    <span class="badge badge-success" style="color: red;">Banned</span>
+                    {% else %}
+                    <span class="badge badge-success" style="color: green;">Active</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <form action="{{ path('admin_ban_user') }}" method="post">
+                        <input type="hidden" name="user_id" value="{{ user.id }}">
+                        <button type="submit" class="btn btn-sm {% if user.banned %}btn-success{% else %}btn-danger{% endif %}">
+                            {% if user.banned %}Unban{% else %}Ban{% endif %}
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
-    {{ include('credit/_form.html.twig') }}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+console.log("hello");
+$(document).ready(function() {
+    
+    $("#myInput").on("keyup", function() {
+        
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+});
+</script>
 
-    <a href="{{ path('app_credit_index') }}">back to list</a>
-{% endblock %}
+<a href="{{ path('app_user_new') }}">Create new</a>
