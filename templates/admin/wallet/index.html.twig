@@ -5,8 +5,12 @@
 {% block body %}
     <h1>Wallets</h1>
 
-    <table class="table">
-        <thead>
+<form class="search-container">
+    <input class="form-control border-0" type="search" placeholder="Search" id="myInput" >
+</form>
+<div class="table-responsive">
+    <table class="table table-primary align-middle" id="mytable">
+        <thead class="table table-dark">
             <tr>
                 <th>Id</th>
                 <th>User</th>
@@ -16,7 +20,8 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
+                <tbody id="myTable">
+
             {% for wallet in wallets %}
                 <tr>
                     <td>{{ wallet.id }}</td>
@@ -33,5 +38,18 @@
             {% endfor %}
         </tbody>
     </table>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    $("#myInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+});
+</script>
 
 {% endblock %}
