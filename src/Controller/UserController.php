@@ -37,6 +37,7 @@ class UserController extends AbstractController
         ]);
     }
  */
+<<<<<<< Updated upstream
  #[Route('showall/{page?1}', name: 'app_user_index', methods: ['GET','POST'])]
 public function index(UserRepository $userRepository,$page=1): Response
             {   
@@ -46,6 +47,13 @@ public function index(UserRepository $userRepository,$page=1): Response
             $rolesString = 'a:1:{i:0;s:10:"ROLE_AGENT";} a:1:{i:0;s:14:"ROLE_LOCATAIRE";} a:1:{i:0;s:11:"ROLE_CLIENT";} a:1:{i:0;s:10:"ROLE_ADMIN";}';
 
             $rolesArray = array("ROLE_AGENT","ROLE_ADMIN","ROLE_CLIENT","ROLE_LOCATAIRE");
+=======
+/* #[Route('/', name: 'app_user_index', methods: ['GET'])]
+public function index(UserRepository $userRepository): Response
+            {   $rolesString = 'a:1:{i:0;s:10:"ROLE_AGENT";} a:1:{i:0;s:14:"ROLE_LOCATAIRE";} a:1:{i:0;s:11:"ROLE_CLIENT";}';
+
+            $rolesArray = array("ROLE_AGENT","ROLE_ADMIN","ROLE_CLIENT");
+>>>>>>> Stashed changes
 
             $cleanedRolesArray = array();
 
@@ -56,18 +64,30 @@ public function index(UserRepository $userRepository,$page=1): Response
             foreach($cleanedRolesArray as $c){
                 $nbr[]=$userRepository->countUsersByRole($c);
             }
+<<<<<<< Updated upstream
             $roles= array("agent","admin","client","locataire");
     return $this->render('user/index.html.twig', [
         'isPaginated' => ($nbrUser<5?false:true),
         'nbrPages'=> ($nbrPages),
         'currentPage'=>($page),
         'users' => $userRepository->findBy([],[],$nbre,($page -1) * $nbre),
+=======
+            $roles= array("admin","locataire","client");
+    return $this->render('user/index.html.twig', [
+        'isPaginated' => false,
+        'users' => $userRepository->findAll(),
+>>>>>>> Stashed changes
         'Roles' => json_encode($roles),
         'nbr' =>json_encode($nbr)
     ]);
 }
+<<<<<<< Updated upstream
  
 /* #[Route('/', name: 'app_user_index', methods: ['GET'])]
+=======
+ */
+#[Route('/', name: 'app_user_index', methods: ['GET'])]
+>>>>>>> Stashed changes
 public function index(UserRepository $userRepository): Response
 {
     return $this->render('user/index.html.twig', [
@@ -76,8 +96,13 @@ public function index(UserRepository $userRepository): Response
     ]);
 }
 
+<<<<<<< Updated upstream
  */    #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
     public function new(Request $request,UserPasswordHasherInterface $UserPasswordHasher): Response
+=======
+    #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
+    public function new(Request $request): Response
+>>>>>>> Stashed changes
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);

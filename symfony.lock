@@ -62,9 +62,12 @@
             "./config/packages/karser_recaptcha3.yaml"
         ]
     },
+<<<<<<< Updated upstream
     "knplabs/knp-paginator-bundle": {
         "version": "v5.9.0"
     },
+=======
+>>>>>>> Stashed changes
     "phpunit/phpunit": {
         "version": "9.6",
         "recipe": {

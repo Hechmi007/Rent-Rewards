@@ -16,5 +16,8 @@ return [
     Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
     Symfony\UX\Chartjs\ChartjsBundle::class => ['all' => true],
     Karser\Recaptcha3Bundle\KarserRecaptcha3Bundle::class => ['all' => true],
+<<<<<<< Updated upstream
     Knp\Bundle\PaginatorBundle\KnpPaginatorBundle::class => ['all' => true],
+=======
+>>>>>>> Stashed changes
 ];
