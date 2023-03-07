@@ -4,7 +4,19 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< Updated upstream
     "content-hash": "5b0d1f27ae1b2db33de119f01e5744f1",
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+    "content-hash": "53619c4978cd65befeeb18b8314e4cdf",
+=======
+    "content-hash": "ecb06a3f230ba90e03404a9a60b19128",
+>>>>>>> a6b1ca1 (mailing)
+=======
+    "content-hash": "73d61a244e7938c6f5d363fb46d8f0bb",
+>>>>>>> 6fa8f4c (captcha)
+>>>>>>> Stashed changes
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1652,6 +1664,7 @@
             "time": "2022-08-30T21:24:44+00:00"
         },
         {
+<<<<<<< Updated upstream
             "name": "knplabs/knp-components",
             "version": "v3.6.0",
             "source": {
@@ -1811,6 +1824,8 @@
             "time": "2022-08-28T14:42:14+00:00"
         },
         {
+=======
+>>>>>>> Stashed changes
             "name": "monolog/monolog",
             "version": "2.9.1",
             "source": {
