@@ -41,6 +41,35 @@
         Sign in
     </button>
       <a href="{{ path('app_forgot_password') }}" class="btn btn-link">Forgot Password?</a>
+      {# facebook login #}
+{% if facebook_login_enabled %}
+    <hr>
+    <div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v12.0&appId=896984404840648&autoLogAppEvents=1" nonce="GQcWi3KX"></script>
+<div class="fb-login-button" data-size="large" data-button-type="login_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="true" data-scope="public_profile,email" onlogin="checkLoginState();"></div>    <script>
+    function checkLoginState() {
+        FB.getLoginStatus(function(response) {
+            statusChangeCallback(response);
+        });
+    }
+
+    function statusChangeCallback(response) {
+        if (response.status === 'connected') {
+            // User is logged in with Facebook, perform login with Symfony
+            var accessToken = response.authResponse.accessToken;
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '{{ path('facebook_login_check') }}');
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    window.location = xhr.responseURL;
+                }
+            };
+            xhr.send('access_token=' + accessToken);
+        }
+    }
+    </script>
+    {% endif %}
 </form>
 <script>
 function validateLoginForm() {

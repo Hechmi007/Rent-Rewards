@@ -22,7 +22,7 @@ class UserController extends AbstractController
         $this->passwordEncoder = $passwordEncoder;
     }
 
-    #[Route('/{page?1}/{nbre?2}', name: 'app_user_index', methods: ['GET'])]
+/*     #[Route('/{page?1}/{nbre?5}', name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository,$nbre,$page): Response
     {
         $nbUser = $userRepository -> count([]);
@@ -34,6 +34,39 @@ class UserController extends AbstractController
             'nbre' => $nbre,
         ]);
     }
+ */
+/* #[Route('/', name: 'app_user_index', methods: ['GET'])]
+public function index(UserRepository $userRepository): Response
+            {   $rolesString = 'a:1:{i:0;s:10:"ROLE_AGENT";} a:1:{i:0;s:14:"ROLE_LOCATAIRE";} a:1:{i:0;s:11:"ROLE_CLIENT";}';
+
+            $rolesArray = array("ROLE_AGENT","ROLE_ADMIN","ROLE_CLIENT");
+
+            $cleanedRolesArray = array();
+
+            foreach ($rolesArray as $role) {
+                $cleanedRole = trim($role);
+                $cleanedRolesArray[] = $cleanedRole;
+            }
+            foreach($cleanedRolesArray as $c){
+                $nbr[]=$userRepository->countUsersByRole($c);
+            }
+            $roles= array("admin","locataire","client");
+    return $this->render('user/index.html.twig', [
+        'isPaginated' => false,
+        'users' => $userRepository->findAll(),
+        'Roles' => json_encode($roles),
+        'nbr' =>json_encode($nbr)
+    ]);
+}
+ */
+#[Route('/', name: 'app_user_index', methods: ['GET'])]
+public function index(UserRepository $userRepository): Response
+{
+    return $this->render('user/index.html.twig', [
+        'isPaginated' => false,
+        'users' => $userRepository->findAll(),
+    ]);
+}
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response

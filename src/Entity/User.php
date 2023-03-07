@@ -23,13 +23,13 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     #[ORM\Column(type:"string", nullable:true)] 
     private $resetToken;
     
-     #[ORM\Column(type:"boolean")] 
+    #[ORM\Column(type:"boolean")] 
     private $EmailVerified = false;
 
     #[ORM\Column(type:"boolean")]
     private $banned= false;
 
-     #[ORM\Column(type:"string", length:55, nullable:true)] 
+    #[ORM\Column(type:"string", length:55, nullable:true)] 
     private $confirmationToken;
 
     #[ORM\Column(length: 255)]
@@ -318,7 +318,10 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     {
         return $this->banned;
     }
-
+    public function getBanned(): bool
+    {
+        return $this->banned;
+    }
     public function setBanned(bool $banned): self
     {
         $this->banned = $banned;

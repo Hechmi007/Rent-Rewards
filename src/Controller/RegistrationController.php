@@ -18,6 +18,7 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Gregwar\CaptchaBundle\Validator\Constraints\ValidCaptcha;
 
 class RegistrationController extends AbstractController
 {
@@ -29,6 +30,7 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
+            
             // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(

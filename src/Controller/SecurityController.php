@@ -13,10 +13,16 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Repository\UserRepository;
 use App\Form\ResetPasswordRequestType;
 use App\Form\ResetPasswordType;
-
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Facebook\Exceptions\FacebookResponseException;
+use Facebook\Exceptions\FacebookSDKException;
+use Facebook\Authentication\AccessToken;
+use Facebook\Authentication\OAuth2Client;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Illuminate\Support\Facades\Env;
 
 class SecurityController extends AbstractController
 {
@@ -41,8 +47,13 @@ class SecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $this->authenticationUtils->getLastUsername();
         $user=$rep->findbyname($lastUsername);
+        if ($user && $user->getBanned()) {
+            $this->addFlash('error', 'Your account has been banned. Please contact the administrator for more information.');
+            return $this->redirectToRoute('app_login');
+        }
+        $facebookLoginEnabled = true;
         $session->set('user',$user);
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername,'error' => $error]);
+        return $this->render('security/login.html.twig', ['last_username' => $lastUsername,'error' => $error,'facebook_login_enabled' => $facebookLoginEnabled,]);
     }
 
     #[Route(path: '/logout', name: 'app_logout')]
@@ -186,6 +197,90 @@ public function sendPasswordResetEmail(MailerInterface $mailer, Request $request
         ]);
 
     // ...
+}
+/**
+ * @Route("/login/facebook", name="facebook_login")
+ */
+public function facebookLogin(Request $request, Security $security)
+{
+    $fb = new \Facebook\Facebook([
+        'app_id' => $this->getParameter('facebook_app_id'),
+        'app_secret' => $this->getParameter('facebook_app_secret'),
+        'default_graph_version' => 'v3.2',
+    ]);
+
+    $helper = $fb->getRedirectLoginHelper();
+
+    $redirectUrl = $request->getUriForPath('/login/facebook-check');
+
+    $permissions = ['email'];
+
+    $loginUrl = $helper->getLoginUrl($redirectUrl, $permissions);
+
+    return new RedirectResponse($loginUrl);
+}
+/**
+ * @Route("/login/facebook-check", name="facebook_login_check")
+ */
+public function facebookLoginCheck(Request $request, Security $security)
+{
+    $fb = new \Facebook\Facebook([
+        'app_id' => $this->getParameter('facebook_app_id'),
+        'app_secret' => $this->getParameter('facebook_app_secret'),
+        'default_graph_version' => 'v3.2',
+    ]);
+
+    $helper = $fb->getRedirectLoginHelper();
+
+    try {
+        $accessToken = $helper->getAccessToken();
+    } catch (FacebookResponseException $e) {
+        // Handle exception
+    } catch (FacebookSDKException $e) {
+        // Handle exception
+    }
+
+    if (!isset($accessToken)) {
+        return $this->redirectToRoute('login');
+    }
+
+    $oAuth2Client = $fb->getOAuth2Client();
+    $tokenMetadata = $oAuth2Client->debugToken($accessToken);
+
+    $tokenMetadata->validateExpiration();
+
+    if (!$accessToken->isLongLived()) {
+        try {
+            $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
+        } catch (FacebookSDKException $e) {
+            // Handle exception
+        }
+    }
+
+    $response = $fb->get('/me?fields=id,name,email', $accessToken);
+
+    $user = $response->getGraphUser();
+
+    // Check if the user already exists in the database
+    $existingUser = $this->getDoctrine()->getRepository(User::class)->findOneBy(['email' => $user->getEmail()]);
+
+    if (!$existingUser) {
+        // User doesn't exist in the database, create a new user with the ROLE_CLIENT role
+        $newUser = new User();
+        $newUser->setEmail($user->getEmail());
+        $newUser->setFacebookId($user->getId());
+        $newUser->setRoles(['ROLE_CLIENT']);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($newUser);
+        $entityManager->flush();
+        $existingUser = $newUser;
+    }
+
+    // Log in the user and redirect to the home page
+    $token = new UsernamePasswordToken($existingUser, null, 'main', $existingUser->getRoles());
+    $security->getTokenStorage()->setToken($token);
+    $this->getDoctrine()->getManager()->flush();
+    return $this->redirectToRoute('home');
 }
 
 }

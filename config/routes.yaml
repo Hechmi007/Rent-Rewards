@@ -29,4 +29,24 @@ confirm_email:
     path: '/confirm-email/{token}'
     controller: App\Controller\RegistrationController::confirmEmail
     methods: ['GET']
-    
+facebook_login:
+    path: /login/facebook
+    controller: App\Controller\SecurityController::facebookLogin
+facebook_login_check:
+    path: /login/facebook-check
+profile:
+    path: /profile
+    controller: App\Controller\ProfileController::index
+    methods: [GET]
+    # Require authentication
+# config/routes.yaml
+modify_profile:
+    path: /profile/modify
+    controller: App\Controller\ProfileController::modify
+    methods: [GET, POST]
+    # Require authentication
+delete_profile:
+    path: /profile/delete
+    controller: App\Controller\ProfileController::delete
+    methods: [POST]
+    # Require authentication

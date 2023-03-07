@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\WalletRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: WalletRepository::class)]
@@ -18,12 +19,13 @@ class Wallet
 
     #[ORM\Column(nullable: true)]
     private ?float $points = null;
-
+ 
     #[ORM\Column(nullable: true,length: 255)]
     private ?string $plan = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?User $username = null;
+
 
     public function getId(): ?int
     {
@@ -77,4 +79,6 @@ class Wallet
 
         return $this;
     }
+
+    
 }
