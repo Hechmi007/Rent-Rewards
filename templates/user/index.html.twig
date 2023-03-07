@@ -51,12 +51,11 @@
             </tr>
         {% endfor %}
         </tbody>
+        
     </table>
-{#     <h1>stat</h1> 
-    <div class="container">
- <canvas id="categories" width="400" height="100"></canvas>
- </div> 
- #}{#     {% if isPaginated %}
+     <a href="{{ path('app_user_new') }}">Create new</a>
+
+{#     {% if isPaginated %}
     <div class="row mt-2">
 <nav aria-label="Page navigation example">
   <ul class="pagination">
@@ -77,10 +76,9 @@
     </div>
 {% endif %}
  #}  
- 
-{#  {% block javascripts %}
-
-           
+    <div class="container">
+ <canvas id="categories" width="400" height="100"></canvas>
+ </div>        
 <script>
     let categories = document.querySelector("#categories")
     let categGraph = new Chart(categories, {
@@ -113,6 +111,5 @@
 
    
 </script>
-{% endblock %}
- #} <a href="{{ path('app_user_new') }}">Create new</a>
+
 {% endblock %}

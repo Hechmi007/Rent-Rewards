@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+
 #[Route('/user')]
 class UserController extends AbstractController
 {
@@ -35,11 +36,11 @@ class UserController extends AbstractController
         ]);
     }
  */
-/* #[Route('/', name: 'app_user_index', methods: ['GET'])]
+ #[Route('/', name: 'app_user_index', methods: ['GET'])]
 public function index(UserRepository $userRepository): Response
-            {   $rolesString = 'a:1:{i:0;s:10:"ROLE_AGENT";} a:1:{i:0;s:14:"ROLE_LOCATAIRE";} a:1:{i:0;s:11:"ROLE_CLIENT";}';
+            {   $rolesString = 'a:1:{i:0;s:10:"ROLE_AGENT";} a:1:{i:0;s:14:"ROLE_LOCATAIRE";} a:1:{i:0;s:11:"ROLE_CLIENT";} a:1:{i:0;s:10:"ROLE_ADMIN";}';
 
-            $rolesArray = array("ROLE_AGENT","ROLE_ADMIN","ROLE_CLIENT");
+            $rolesArray = array("ROLE_AGENT","ROLE_ADMIN","ROLE_CLIENT","ROLE_LOCATAIRE");
 
             $cleanedRolesArray = array();
 
@@ -50,7 +51,7 @@ public function index(UserRepository $userRepository): Response
             foreach($cleanedRolesArray as $c){
                 $nbr[]=$userRepository->countUsersByRole($c);
             }
-            $roles= array("admin","locataire","client");
+            $roles= array("agent","admin","client","locataire");
     return $this->render('user/index.html.twig', [
         'isPaginated' => false,
         'users' => $userRepository->findAll(),
@@ -58,8 +59,8 @@ public function index(UserRepository $userRepository): Response
         'nbr' =>json_encode($nbr)
     ]);
 }
- */
-#[Route('/', name: 'app_user_index', methods: ['GET'])]
+ 
+/* #[Route('/', name: 'app_user_index', methods: ['GET'])]
 public function index(UserRepository $userRepository): Response
 {
     return $this->render('user/index.html.twig', [
@@ -68,7 +69,7 @@ public function index(UserRepository $userRepository): Response
     ]);
 }
 
-    #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
+ */    #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
     {
         $user = new User();
@@ -138,4 +139,6 @@ public function index(UserRepository $userRepository): Response
     
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
-}    
+    
+ 
+}  
