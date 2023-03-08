@@ -103,7 +103,8 @@ public function forgotPassword(
                 ->setBody(
                     $this->renderView(
                         'security/reset_password_email.html.twig',
-                        ['token' => $token]
+                        [ 'username' => $user->getUsername(),
+                            'token' => $token]
                     ),
                     'text/html'
                 );

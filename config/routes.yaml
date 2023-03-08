@@ -29,13 +29,6 @@ confirm_email:
     path: '/confirm-email/{token}'
     controller: App\Controller\RegistrationController::confirmEmail
     methods: ['GET']
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-    
->>>>>>> a6b1ca1 (mailing)
-=======
->>>>>>> Stashed changes
 facebook_login:
     path: /login/facebook
     controller: App\Controller\SecurityController::facebookLogin
@@ -46,7 +39,6 @@ profile:
     controller: App\Controller\ProfileController::index
     methods: [GET]
     # Require authentication
-# config/routes.yaml
 modify_profile:
     path: /profile/modify
     controller: App\Controller\ProfileController::modify
@@ -57,7 +49,3 @@ delete_profile:
     controller: App\Controller\ProfileController::delete
     methods: [POST]
     # Require authentication
-<<<<<<< Updated upstream
-=======
->>>>>>> 6fa8f4c (captcha)
->>>>>>> Stashed changes

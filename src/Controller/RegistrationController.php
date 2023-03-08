@@ -56,6 +56,7 @@ $message = (new Swift_Message('Confirm your email'))
             'emails/confirm_email.html.twig',
             ['token' => $token, 'url' => $this->generateUrl('confirm_email', [
                 'token' => $token,
+                
             ], UrlGeneratorInterface::ABSOLUTE_URL)]
         ),
         'text/html'

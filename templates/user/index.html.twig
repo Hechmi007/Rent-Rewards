@@ -3,28 +3,13 @@
 {% block title %}User index{% endblock %}
 
 {% block body %}
-<<<<<<< HEAD
-<<<<<<< Updated upstream
 <h1>User index</h1>
 <form class="search-container">
     <input class="form-control border-0" type="search" placeholder="Search" id="myInput">
-=======
-<h1>User index</h1>
-<form class="search-container">
-    <input class="form-control border-0" type="search" placeholder="Search" id="myInput" >
->>>>>>> 7439877 (recherche)
 </form>
 <div class="table-responsive">
     <table class="table table-primary align-middle" id="mytable">
         <thead class="table table-dark">
-<<<<<<< HEAD
-=======
-    <h1>User index</h1>
-    <table class="table">
-        <thead>
->>>>>>> Stashed changes
-=======
->>>>>>> 7439877 (recherche)
             <tr>
                 <th>Id</th>
                 <th>Username</th>
@@ -48,10 +33,6 @@
                     <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
                     <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
                 </td>
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
->>>>>>> 7439877 (recherche)
                 <td>
                     {% if user.banned %}
                     <span class="badge badge-success" style="color: red;">Banned</span>
@@ -67,28 +48,6 @@
                         </button>
                     </form>
                 </td>
-<<<<<<< HEAD
-=======
-
-                 <td>
-            {% if user.banned %}
-<span class="badge badge-success" style="color: red;">Banned</span>
-            {% else %}
-<span class="badge badge-success" style="color: green;">Active</span>
-            {% endif %}
-        </td>
-        
-        <td>
-<form action="{{ path('admin_ban_user') }}" method="post">
-    <input type="hidden" name="user_id" value="{{ user.id }}">
-    <button type="submit" class="btn btn-sm {% if user.banned %}btn-success{% else %}btn-danger{% endif %}">
-        {% if user.banned %}Unban{% else %}Ban{% endif %}
-    </button>
-</form>
-        </td>
->>>>>>> Stashed changes
-=======
->>>>>>> 7439877 (recherche)
             </tr>
             {% else %}
             <tr>
@@ -97,13 +56,6 @@
             {% endfor %}
         </tbody>
     </table>
-<<<<<<< HEAD
-{#     <h1>stat</h1> 
-    <div class="container">
- <canvas id="categories" width="400" height="100"></canvas>
- </div> 
- #}{#     {% if isPaginated %}
-=======
 </div>
 {% if isPaginated %}
     
@@ -144,7 +96,6 @@ $(document).ready(function() {
 
 
 {#     {% if isPaginated %}
->>>>>>> 7439877 (recherche)
     <div class="row mt-2">
 <nav aria-label="Page navigation example">
   <ul class="pagination">
@@ -165,10 +116,9 @@ $(document).ready(function() {
     </div>
 {% endif %}
  #}  
- 
-{#  {% block javascripts %}
-
-           
+    <div class="container">
+ <canvas id="categories" width="400" height="100"></canvas>
+ </div>        
 <script>
     let categories = document.querySelector("#categories")
     let categGraph = new Chart(categories, {
@@ -201,10 +151,5 @@ $(document).ready(function() {
 
    
 </script>
-<<<<<<< Updated upstream
 
-=======
-{% endblock %}
- #} <a href="{{ path('app_user_new') }}">Create new</a>
->>>>>>> Stashed changes
 {% endblock %}

@@ -5,23 +5,9 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 
 parameters:
-<<<<<<< Updated upstream
     facebook_app_id: '896984404840648'
     facebook_app_secret: '7e8881a62e20ae95994132bc285f0365'
     google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
-=======
-<<<<<<< HEAD
-
-<<<<<<< HEAD
-services:
-=======
-
-=======
-    facebook_app_id: '896984404840648'
-    facebook_app_secret: '7e8881a62e20ae95994132bc285f0365'
-    google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
->>>>>>> 6fa8f4c (captcha)
->>>>>>> Stashed changes
 
 services:
     App\Controller\SecurityController:
@@ -33,15 +19,7 @@ services:
             $mailer: '@swiftmailer.mailer.default'
         tags: ['controller.service_arguments']
     
-<<<<<<< Updated upstream
     
-=======
-<<<<<<< HEAD
->>>>>>> a6b1ca1 (mailing)
-=======
-    
->>>>>>> 6fa8f4c (captcha)
->>>>>>> Stashed changes
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
