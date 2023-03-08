@@ -7,9 +7,14 @@
     <h1><center>All products for rent</center></h1>
     <br>
     <br>
+<form class="search-container">
+    <input class="form-control border-0" type="search" placeholder="Search" id="myInput" >
+</form>
+    <br>
+    <br>
 
 <div class="table-responsive">
-    <table class="table table-primary align-middle">
+    <table class="table table-primary align-middle" id="mytable">
         <thead class="table table-dark">
             <tr>
                 <th>Id</th>
@@ -24,7 +29,7 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="myTable">
         {% for product in pagination %}
             <tr>
                 <td>{{ product.id }}</td>
@@ -32,7 +37,7 @@
                 <td>{{ product.RentPrice }}</td>
                 <td>{{ product.Availabilitydate ? product.Availabilitydate|date('Y-m-d') : '' }}</td>
                 <td>{{ product.ProductType }}</td>
-                <td><img src="{{ asset('/uploads/products/' ~ product.ProductPicture) }}" style="width: 50%; height: auto;"></td>
+                <td>{{ product.ProductPicture }}</td>
                 <td>{{ product.ProductAdress }}</td>
                 <td>{{ product.ProductsCategory }}</td>
                 <td>{{ product.StillAvailable ? 'Digital' : 'Physical' }}</td>
@@ -49,9 +54,21 @@
         <div class="pagination pagination-sm">
         {{ knp_pagination_render(pagination) }}
     </div>
-
         </tbody>
     </table>
+</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    $("#myInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+});
+</script>
+
     <a class ="btn btn-secondary text-white" href="{{ path('app_products_new') }}">Add new product</a>
     <br>
     <br>

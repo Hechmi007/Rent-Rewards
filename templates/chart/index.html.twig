@@ -5,7 +5,7 @@
 
     <script src="{{ asset('node_modules/chart.js/dist/chart.min.js') }}"></script>
     <script>
-        var productCountData = {{ productCounts|json_encode()|raw }};
+        var productCountData = {{ catnom|json_encode()|raw }};
         var labels = productCountData.map(function(data) {
             return data.category;
         });

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\ProductSearchType;
+use App\Form\ProdsearchType;
 use Stripe;
 use Knp\Component\Pager\PaginatorInterface;
 use Dompdf\Dompdf;
@@ -16,12 +17,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Khill\Lavacharts\Lavacharts;
 
 #[Route('/products')]
 class ProductsController extends AbstractController
 {   
+    
     #[Route('/{id}/thankyou', name: 'app_products_success', methods: ['GET'])]
     public function success($id, ProductsRepository $ProductsRepository): Response {
     
@@ -93,8 +96,33 @@ class ProductsController extends AbstractController
             'pagination' => $pagination,
         ]);
     }
-
     
+        #[Route('/search', name: 'ajax_search', methods: ['GET'])]    
+        public function searchAction(Request $request,ProductsRepository $ProductsRepository)
+        {
+            $em = $this->getDoctrine()->getManager();
+      
+            $requestString = $request->get('q');
+      
+            $products = $em->getRepository('App\Entity\Products')->findEntitiesByString($requestString);
+      
+            if(!$products) {
+                $result['products']['error'] = "NOT FOUND";
+            } else {
+                $result['products'] = $this->getRealEntities($products);
+            }
+      
+            return new Response(json_encode($result));
+        }
+      
+        public function getRealEntities($products){
+      
+            foreach ($products as $product){
+                $realEntities[$product->getId()] = $product->getProductname();
+            }
+            return $realEntities;
+        }    
+
 
     #[Route('/view', name: 'app_products_View', methods: ['GET','POST'])]
     public function View(Request $request, ProductsRepository $ProductsRepository): Response
@@ -111,9 +139,8 @@ class ProductsController extends AbstractController
             'products' => $products,
             'form' => $form->createView()
         ]);
-
-
     }
+
 
     #[Route('/new', name: 'app_products_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ProductsRepository $productsRepository, SluggerInterface $slugger): Response

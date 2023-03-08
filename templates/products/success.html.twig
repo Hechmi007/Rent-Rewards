@@ -49,6 +49,7 @@
       <center><h6>Amount: {{ products.RentPrice + (products.RentPrice * 19) / 100 }} TND
       <center><h6>Payment Status: ACCEPTED
       <center><h6>Payment Method: Credit Card
+      <center><h5 style="color:green">Reward: {{ ( products.RentPrice * 20 ) / 100 }} RentPoints
       <br><br><br>
         <center><a class ="btn btn-primary"  href="{{ path('app_products_pdf',{'id': products.id} )}}">Show Invoice</a>
 <br><br><br><br><br><br>

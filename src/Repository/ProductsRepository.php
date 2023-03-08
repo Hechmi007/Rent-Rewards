@@ -16,6 +16,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ProductsRepository extends ServiceEntityRepository
 {
+    
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Products::class);
@@ -29,16 +30,53 @@ class ProductsRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-    public function search(string $query = '')
+    public function findEntitiesByString($productname){
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT e
+                FROM App\Entity\Products e
+                WHERE e.productname LIKE :productname'
+            )
+            ->setParameter('productname', '%'.$productname.'%')
+            ->getResult();
+    }
+    public function countProductsByproductname($productname)
+{
+    return $this->createQueryBuilder('p')
+        ->select('COUNT(p.id)')
+        ->where('p.productname LIKE :productname')
+        ->setParameter('productname', '%"'.$productname.'"%')
+        ->getQuery()
+            ->getSingleScalarResult();
+}
+public function getNombreAchatsPourCategorie($products_category_id)
     {
-        $qb = $this->createQueryBuilder('p');
-        
-        $qb->where('p.productname LIKE :query')
-           ->setParameter('query', '%'.$query.'%')
-           ->orderBy('p.productname', 'ASC');
-        
-        return $qb->getQuery()->getResult();
-    }    
+        $query = $this->createQueryBuilder('a')
+            ->select('COUNT(a.id) AS nombre_achats')
+            ->join('a.category', 'p')
+            ->join('p.productname', 'c')
+            ->where('c.id = :products_category_id')
+            ->setParameter('products_category_id', $products_category_id)
+            ->getQuery();
+
+        $resultat = $query->getSingleScalarResult();
+
+        return $resultat;
+    }
+
+
+    public function findByProductName($productname)
+    {
+        return $this->createQueryBuilder('q')
+        ->createQueryBuilder()
+        ->select('p')
+        ->from('App\Entity\Products', 'q')
+        ->where('p.productname LIKE :productname')
+        ->setParameter('productname', '%' . $productname . '%')
+        ->getQuery()
+        ->getResult();
+    
+    }
     public function remove(Products $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
