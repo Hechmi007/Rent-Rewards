@@ -1,7 +1,18 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
-pp_search:
-    path: /search
-    controller: App\Controller\PostController::search
-    methods: [POST]
+app_stripe:
+    path: /stripe
+    controller: App\Controller\StripeController::index
+
+product_category_chart:
+    path: '/products/chart'
+    controller: App\Controller\ProductController::productCategoryChart
+
+chart:
+    path: /chart
+    controller: App\Controller\ChartController::index
+
+products_search:
+    path: /products/view
+    controller: App\Controller\ProductsController::view

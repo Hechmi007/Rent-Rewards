@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Products{% endblock %}
+
+{% block body %}
+
+    <center><h1>{{ product.productname }} Description</h1></center>
+
+<br>
+<br>
+<div se
+<div class="container">
+    <table class="table table-striped" style="margin-left: auto">
+        <tbody>
+        <tr>
+            <center><img src="{{ asset('images/trot.jpg') }}" width="300" height="330"></center>
+            <br>
+</tr>
+            <tr>
+                <th class="thead-dark">Id</th>
+                <td>{{ product.id }}</td>
+            </tr>
+            <tr>
+                <th>Product Name</th>
+                <td>{{ product.productname }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ product.RentPrice }}</td>
+            </tr>
+            <tr>
+                <th>Availability Date</th>
+                <td>{{ product.Availabilitydate ? product.Availabilitydate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Product Type</th>
+                <td>{{ product.ProductType }}</td>
+            </tr>
+            <tr>
+                <th>Product Adress</th>
+                <td>{{ product.ProductAdress }}</td>
+            </tr>
+            <tr>
+                <th>Digital Item</th>
+                <td>{{ product.StillAvailable ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <br>
+    {{ include('stripe/index.html.twig') }} 
+    <br><br><br>
+    <a class ="btn btn-secondary text-white"  href="{{ path('app_products_index') }}">Back</a>
+                        
+
+<br>
+<br>
+{% endblock %}
