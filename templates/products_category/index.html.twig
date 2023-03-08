@@ -1,0 +1,55 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Products Categories{% endblock %}
+
+{% block body %}
+    <h1><center>Products Categories</center></h1>
+<form class="search-container">
+    <input class="form-control border-0" type="search" placeholder="Search" id="myInput" >
+</form>
+<br>
+<div class="table-responsive">
+    <table class="table table-primary align-middle">
+        <thead class="table table-dark">
+            <tr>
+                <th>Id</th>
+                <th>Category</th>
+                <th>Digital</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="myTable">
+        {% for products_category in pagination %}
+            <tr>
+                <td>{{ products_category.id }}</td>
+                <td>{{ products_category.Categoryname }}</td>
+                <td>{{ products_category.Type ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a class ="btn btn-primary text-white" href="{{ path('app_products_category_show', {'id': products_category.id}) }}">show</a>
+                    <a class ="btn btn-primary text-white" href="{{ path('app_products_category_edit', {'id': products_category.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        <div class="pagination pagination-lg">
+        {{ knp_pagination_render(pagination) }}
+        </tbody>
+    </table>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    $("#myInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+});
+</script>
+    <a class ="btn btn-primary text-white" href="{{ path('app_products_category_new') }}">Create new</a>
+    <a class ="btn btn-primary text-white" href="http://127.0.0.1:8000/products/">Show Products</a>
+{% endblock %}

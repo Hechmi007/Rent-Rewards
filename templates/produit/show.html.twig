@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Produit{% endblock %}
+{% block title %}Product{% endblock %}
 
 {% block body %}
-    <h1>Produit</h1>
+    <h1>Product</h1>
 
     <table class="table">
         <tbody>
@@ -12,15 +12,15 @@
                 <td>{{ produit.id }}</td>
             </tr>
             <tr>
-                <th>Nomproduit</th>
+                <th>Name</th>
                 <td>{{ produit.nomproduit }}</td>
             </tr>
             <tr>
-                <th>Prixproduit</th>
+                <th>Price</th>
                 <td>{{ produit.prixproduit }}</td>
             </tr>
             <tr>
-                <th>Dateproduit</th>
+                <th>Availability</th>
                 <td>{{ produit.dateproduit ? produit.dateproduit|date('Y-m-d') : '' }}</td>
             </tr>
             <tr>
@@ -30,7 +30,7 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_produit_index') }}">back to list</a>
+    <a href="{{ path('app_produit_index') }}"><h5>Show all</a>
 
     <a href="{{ path('app_produit_edit', {'id': produit.id}) }}">edit</a>
 

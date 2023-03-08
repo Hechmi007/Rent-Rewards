@@ -1,0 +1,76 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Products index{% endblock %}
+
+{% block body %}
+<br>
+    <h1><center>All products for rent</center></h1>
+    <br>
+    <br>
+<form class="search-container">
+    <input class="form-control border-0" type="search" placeholder="Search" id="myInput" >
+</form>
+    <br>
+    <br>
+
+<div class="table-responsive">
+    <table class="table table-primary align-middle" id="mytable">
+        <thead class="table table-dark">
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Availability</th>
+                <th>Product Type</th>
+                <th>Picture</th>
+                <th>Adress</th>
+                <th>Category</th>
+                <th>Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="myTable">
+        {% for product in pagination %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td>{{ product.productname }}</td>
+                <td>{{ product.RentPrice }}</td>
+                <td>{{ product.Availabilitydate ? product.Availabilitydate|date('Y-m-d') : '' }}</td>
+                <td>{{ product.ProductType }}</td>
+                <td>{{ product.ProductPicture }}</td>
+                <td>{{ product.ProductAdress }}</td>
+                <td>{{ product.ProductsCategory }}</td>
+                <td>{{ product.StillAvailable ? 'Digital' : 'Physical' }}</td>
+                <td>
+                    <a class ="btn btn-primary text-white" href="{{ path('app_products_show', {'id': product.id}) }}">Show</a>
+                    <a class ="btn btn-primary text-white" href="{{ path('app_products_edit', {'id': product.id}) }}">Edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        <div class="pagination pagination-sm">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+        </tbody>
+    </table>
+</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    $("#myInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+});
+</script>
+
+    <a class ="btn btn-secondary text-white" href="{{ path('app_products_new') }}">Add new product</a>
+    <br>
+    <br>
+    <a class ="btn btn-primary text-white" href="http://127.0.0.1:8000/products/category">Manage Categories</a>
+{% endblock %}

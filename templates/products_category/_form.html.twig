@@ -1,0 +1,28 @@
+<div class="container">
+<table>
+{{ form_start(form,{'attr':{'novalidate':'novalidate'}}) }}
+<tr>
+<div class="mb-3">
+    <td>{{ form_label(form.Categoryname,"Category Name:") }}</td>
+    <td>{{ form_widget(form.Categoryname,{'attr':{'class':'form-control'}}) }}</td>
+    <td>{% if form_errors(form.Categoryname) is not empty %}</td>
+    <div class="alert alter-danger"
+    <td>{{ form_errors(form.Categoryname) }}</td>
+    </div>
+</tr>
+    {% endif %}
+</div>
+<tr>
+<div class="input-group mb-3">
+    <td>{{ form_label(form.Type,"Category Type:") }}</td>
+    <td>{{ form_widget(form.Type,{'attr':{'class':'input-group mb-3'}}) }}</td>
+    <td>{% if form_errors(form.Type) is not empty %}</td>
+    <div class="alert alter-danger"
+    <td>{{ form_errors(form.Type) }}</td> </div>
+    {% endif %}
+    </tr>
+</div>
+</table>
+    <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
+</div>
