@@ -11,6 +11,9 @@
         "doctrine/doctrine-bundle": "^2.8",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.14",
+        "guzzlehttp/guzzle": "^7.5",
+        "kartik-v/bootstrap-star-rating": "^4.1",
+        "nyholm/psr7": "^1.5",
         "dompdf/dompdf": "^2.0",
         "google/apiclient": "^2.13",
         "khill/lavacharts": "*",
@@ -20,6 +23,7 @@
         "sensio/framework-extra-bundle": "^6.1",
         "stripe/stripe-php": "^10.7",
         "symfony/asset": "5.4.*",
+        "symfony/config": "6.0",
         "symfony/console": "5.4.*",
         "symfony/doctrine-messenger": "5.4.*",
         "symfony/dotenv": "5.4.*",
@@ -45,9 +49,11 @@
         "symfony/ux-chartjs": "^2.7",
         "symfony/validator": "5.4.*",
         "symfony/web-link": "5.4.*",
+        "symfony/webpack-encore-bundle": "^1.16",
         "symfony/yaml": "5.4.*",
         "twig/extra-bundle": "^2.12|^3.0",
-        "twig/twig": "^2.12|^3.0"
+        "twig/twig": "^2.12|^3.0",
+        "vich/uploader-bundle": "^2.0"
     },
     "config": {
         "allow-plugins": {
@@ -106,6 +112,12 @@
         "symfony/maker-bundle": "^1.0",
         "symfony/phpunit-bridge": "^6.2",
         "symfony/stopwatch": "5.4.*",
-        "symfony/web-profiler-bundle": "5.4.*"
+        "symfony/web-profiler-bundle": "5.4.*",
+        "knplabs/knp-paginator-bundle": "^5.4"
+
     }
+    
+    
+    
+    
 }

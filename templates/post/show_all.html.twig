@@ -1,0 +1,354 @@
+
+{% block title %}Posts{% endblock %}
+
+{# {% block javascripts %}
+<script src="{{ asset('/assets/vendor/purecounter/purecounter_vanilla.js') }}"></script>
+<script src="{{ asset('/assets/vendor/aos/aos.js') }}"></script>
+<script src="{{ asset('/assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('/assets/vendor/glightbox/js/glightbox.min.js') }}"></script>
+<script src="{{ asset('/assets/vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
+<script src="{{ asset('/assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
+<script src="{{ asset('/assets/vendor/waypoints/noframework.waypoints.js') }}"></script>
+<script src="{{ asset('/assets/vendor/php-email-form/validate.js') }}"></script>
+
+<!-- Template Main JS File -->
+<script src="{{ asset('assets/js/main.js') }}"></script>
+{% endblock %}
+{% block stylesheets %}
+<link href="{{ asset('/assets/img/favicon.png') }}" rel="icon">
+<link href="{{ asset('/assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+<!-- Vendor CSS Files -->
+<link href="{{ asset('/assets/vendor/aos/aos.css') }}" rel="stylesheet">
+<link href="{{ asset('/assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+<link href="{{ asset('/assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+<link href="{{ asset('/assets/vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+<link href="{{ asset('/assets/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
+<link href="{{ asset('/assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
+
+<!-- Template Main CSS File -->
+<link href="{{ asset('/assets/css/style.css') }}" rel="stylesheet">
+{% endblock %} #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+
+<div class="row  align-middle">
+
+<div class="section">
+      <div class="row justify-content-center footer-cta" data-aos="fade-up">
+        <div class="col-lg-7 mx-auto text-center">
+          <h3 class="mb-4">Be a part our community</h2>
+          <p>
+            <a
+              href="{{ path('app_post_new') }}"
+              target="_blank"
+              class="btn btn-primary text-white py-3 px-4"
+              >Create Post</a
+            >
+          </p>
+        </div>
+        <!-- /.col-lg-7 -->
+      </div>
+      <!-- /.row -->
+    </div>
+
+
+
+
+
+
+
+
+</div>
+</div>
+<div  class="blog mt-2">
+      <div class="container" >
+
+        
+
+        
+        <div class="row">
+
+
+          <div class="row">
+            <div class="col-8">
+              <h2>Posts</h2>
+              <p>Check our latest posts</p>
+            </div>
+            <div class="col-4 pb-6 align-self-end">
+              <div class="row justify-content-around g-0">
+                <div class="col">
+                  <h4 class="mt-1 mx-auto">Sort Options</h4>
+                </div>
+                <div class="col">
+
+                  <form method="get" action="{{ path('app_show_all', {'page': currentPage, 'nbr': nbr,'sort': sort}) }}">
+                    <label for="sort">Sort by:</label>
+                    <select class="form-select form-select mb-3" id="sort" name="sort" onchange="this.form.submit()">
+                      <option value="date_desc"{{ sort == 'date_desc' ? ' selected' : '' }}>Date (newest to oldest)</option>
+                      <option value="date_asc"{{ sort == 'date_asc' ? ' selected' : '' }}>Date (oldest to newest)</option>
+                      <option value="title_asc"{{ sort == 'title_asc' ? ' selected' : '' }}>Title (A-Z)</option>
+                      <option value="title_desc"{{ sort == 'title_desc' ? ' selected' : '' }}>Title (Z-A)</option>
+                      <option value="rating_desc"{{ sort == 'rating_desc' ? ' selected' : '' }}>Rating (highest to lowest)</option>
+                      <option value="comments_desc"{{ sort == 'comments_desc' ? ' selected' : '' }}>Number of comments (highest to lowest)</option>
+                    </select>
+                  </form>
+
+                  {# <select class="form-select form-select mb-3" aria-label=".form-select-lg example">
+                    <option selected>sort option</option>
+                    <option value="1">option One</option>
+                    <option value="2">option Two</option>
+                    <option value="3">option Three</option>
+                  </select> #}
+                </div>
+              </div>
+
+
+
+              {# <h2>Sort Options</h2>
+              <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                <option selected>Open this select menu</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select> #}
+            </div>
+
+            
+          </div>
+          <div class="col-lg-8 entries">
+            {% for post in posts %}
+            <article class="entry">
+              
+              <div class="entry-img">
+              {% if post.image %}
+              <img src="{{ vich_uploader_asset(post, 'imageFile') }}" alt="Post Image">
+              {% endif %}
+                {# <img src="{{ vich_uploader_asset(post, 'imageFile') }}" alt="" class="img-fluid"> #}
+              </div>
+
+              <h2 class="entry-title">
+                <a href="{{ path('app_post_show', {'id': post.id}) }}">{{post.title}}</a>
+                {% for i in 1..post.rating %}
+    <i class="bi bi-star-fill" style="color: #ffe234;"></i>
+       
+    {% endfor %}
+    {% for i in 1..(5-post.rating) %}
+
+    <i class="bi bi-star"></i>
+    {% endfor %}
+              </h2>
+
+              <div class="entry-meta">
+                <ul>
+                  <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="{{ path('app_post_show', {'id': post.id}) }}">{{post.username}}</a></li>
+                  <li class="d-flex align-items-center"><i class="bi bi-hourglass-bottom"></i> <a href="{{ path('app_post_show', {'id': post.id}) }}"><time >{{ post.getElapsedTime()}}</time></a></li>
+                  <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="{{ path('app_post_show', {'id': post.id}) }}">{{post.comments|length}} Comments</a></li>
+                  <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="{{ path('app_post_show', {'id': post.id}) }}"><time >{{ post.createdat ? post.createdat|date('Y-m-d') : '' }}</time></a></li>
+                  <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="{{ path('app_post_show', {'id': post.id}) }}">{{post.rating}} stars</a></li>                </ul>
+              </div>
+
+              <div class="entry-content">
+                <p>
+                  {{post.content}}
+                </p>
+                <div class="read-more">
+                  <a href="{{ path('app_post_show', {'id': post.id}) }}">Read More</a>
+                </div>
+              </div>
+
+            </article><!-- End blog entry -->
+            {% endfor %}
+           
+
+        {% if isPaginated %}
+            <div class="blog-pagination">
+              <ul class="justify-content-center">
+              <li ><a href="{{ path('app_show_all', {'page': currentPage-1 }) }}"><i class="bi bi-chevron-double-left"></i></a></li>
+              {% for i in range(1, nbrPages) %}
+                <li class="{{ i == currentPage ? 'active' : '' }}"><a href="{{path('app_show_all', {'page': i,'sort':sort}) }}">{{i}}</a></li>
+              {% endfor %}
+                {% dump nbrPages, currentPage, nbr, sort %}
+                <li ><a href="{{ path('app_show_all', {'page': currentPage+1,'sort':sort}) }}"><i class="bi bi-chevron-double-right"></i></a></li>
+              {# <li ><a href=""><i class="bi bi-sliders2-vertical"></i></a></li> #}
+              <li >
+                
+                  {# <label for="nbr">Show:</label>
+                  <a href="{{ path('app_show_all', {'page': 1, 'nbr': 5, 'sort': sort}) }}">
+                  <select name="nbr" id="nbr" onchange="this.form.submit()">
+                    <option value="5" {{ nbr == 5 ? 'selected' : '' }}><a href="{{ path('app_show_all', {'page': 1, 'nbr': 5, 'sort': sort}) }}">5 per page</a></option>
+                    <option value="10" {{ nbr == 10 ? 'selected' : '' }}><a href="{{ path('app_show_all', {'page': 1, 'nbr': 10, 'sort': sort}) }}">10 per page</a></option>
+                    <option value="20" {{ nbr == 20 ? 'selected' : '' }}><a href="{{ path('app_show_all', {'page': 1, 'nbr': 15, 'sort': sort}) }}">15 per page</a></option>
+                    <option value="50" {{ nbr == 50 ? 'selected' : '' }}><a href="{{ path('app_show_all', {'page': 1, 'nbr': 20, 'sort': sort}) }}">20 per page</a></option>
+                  </select></a>
+                   #}
+                {{ include('post/showall.html.twig') }}
+              </li>
+              <script>
+              document.querySelector('label[for="show_all_form_nbr"]').style.display = 'none';
+              </script>
+              {# {{ include('post/showall.html.twig') }} #}
+              
+                
+
+              </ul>
+            </div>
+            
+            {% endif %}
+
+          </div><!-- End blog entries list -->
+          
+          <div class="col-lg-4">
+
+
+
+
+            <div class="sidebar">
+              <h3 class="sidebar-title">Search</h3>
+              <div class="sidebar-item search-form">
+                <form action="">
+                  <input type="text" id="search" class="form-control" placeholder="Search posts ...">
+                  <button type="submit"><i class="bi bi-search"></i></button>
+                </form>
+              </div><!-- End sidebar search formn-->
+
+             
+                 
+                
+              <!-- End sidebar search formn-->
+
+
+{#             search scripts
+ #}
+              <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
+              <script type="text/javascript">
+                jQuery(document).ready(function() {
+                var searchRequest = null;
+                $("#search").keyup(function() {
+                    var minlength = 2;
+                    var that = this;
+                    var value = $(this).val();
+                    var entitySelector = $("#entitiesNav").html('');
+                    var postContainer = $('#recent-posts').html('');
+                    var searchTitle = $('#search-title').html('Search results for: ' + value);
+                    if (value.length >= minlength ) {
+                        if (searchRequest != null)
+                            searchRequest.abort();
+                            searchRequest = $.ajax({
+                            type: "GET",
+                            url: "{{ path('ajax_search_post') }}",
+                            data: {
+                                'q' : value
+                            },
+                            dataType: "text",
+                            success: function(msg){
+                              
+                                //we need to check if the value is the same
+                                if (value==$(that).val()) {
+                                    var result = JSON.parse(msg);
+                                    $.each(result, function(key, arr) {
+                                      $.each(arr, function(id, value) {
+                                          if (key == 'posts') { // assuming the posts are in a property called 'posts'
+                                              if (id != 'error') {
+                                                  // create the post item and append it to the container
+                                                  console.log(value);
+                                                  var postItem = $('<div class="post-item clearfix">').appendTo(postContainer);
+                                                  $('<img>').attr('src', '/images/post/' + value.image).appendTo(postItem);
+                                                  $('<h4>').html('<a href="/daten/'+id+'">'+value.title+'</a>').appendTo(postItem);
+                                                  $('<time>').attr('datetime', value.createdat).text(value.createdat).appendTo(postItem);
+                                              } else {
+                                                  postContainer.append('<li class="errorLi">'+value+'</li>');
+                                              }
+                                          }
+                                      });
+                                  });
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+
+
+              </script>
+
+              <h3 class="sidebar-title" id="search-title">Recent Posts</h3>
+              <div class="sidebar-item recent-posts" id="recent-posts">
+                <div class="post-item clearfix">
+                  <img src="{{ asset('assets/img/blog/blog-recent-1.jpg') }}" alt="">
+                  <h4><a href="blog-single.html">Nihil blanditiis at in nihil autem</a></h4>
+                  <time datetime="2020-01-01">Jan 1, 2020</time>
+                </div>
+
+                <div class="post-item clearfix">
+                  <img src="{{ asset('assets/img/blog/blog-recent-2.jpg') }}" alt="">
+                  <h4><a href="blog-single.html">Quidem autem et impedit</a></h4>
+                  <time datetime="2020-01-01">Jan 1, 2020</time>
+                </div>
+
+                <div class="post-item clearfix">
+                  <img src="{{ asset('assets/img/blog/blog-recent-3.jpg') }}" alt="">
+                  <h4><a href="blog-single.html">Id quia et et ut maxime similique occaecati ut</a></h4>
+                  <time datetime="2020-01-01">Jan 1, 2020</time>
+                </div>
+
+                <div class="post-item clearfix">
+                  <img src="{{ asset('assets/img/blog/blog-recent-4.jpg') }}" alt="">
+                  <h4><a href="blog-single.html">Laborum corporis quo dara net para</a></h4>
+                  <time datetime="2020-01-01">Jan 1, 2020</time>
+                </div>
+
+                <div class="post-item clearfix">
+                  <img src="{{ asset('assets/img/blog/blog-recent-5.jpg') }}" alt="">
+                  <h4><a href="blog-single.html">Et dolores corrupti quae illo quod dolor</a></h4>
+                  <time datetime="2020-01-01">Jan 1, 2020</time>
+                </div>
+
+              </div><!-- End sidebar recent posts-->
+              <h3 class="sidebar-title">Categories</h3>
+              <div class="sidebar-item categories">
+                <ul>
+                  <li><a href="#">General <span>(25)</span></a></li>
+                  <li><a href="#">Lifestyle <span>(12)</span></a></li>
+                  <li><a href="#">Travel <span>(5)</span></a></li>
+                  <li><a href="#">Design <span>(22)</span></a></li>
+                  <li><a href="#">Creative <span>(8)</span></a></li>
+                  <li><a href="#">Educaion <span>(14)</span></a></li>
+                </ul>
+              </div><!-- End sidebar categories-->
+
+              
+
+              <h3 class="sidebar-title">Tags</h3>
+              <div class="sidebar-item tags">
+                <ul>
+                  <li><a href="#">App</a></li>
+                  <li><a href="#">IT</a></li>
+                  <li><a href="#">Business</a></li>
+                  <li><a href="#">Mac</a></li>
+                  <li><a href="#">Design</a></li>
+                  <li><a href="#">Office</a></li>
+                  <li><a href="#">Creative</a></li>
+                  <li><a href="#">Studio</a></li>
+                  <li><a href="#">Smart</a></li>
+                  <li><a href="#">Tips</a></li>
+                  <li><a href="#">Marketing</a></li>
+                </ul>
+              </div><!-- End sidebar tags-->
+
+            </div><!-- End sidebar -->
+
+          </div><!-- End blog sidebar -->
+
+        </div>
+
+      </div>
+    </div><!-- End Blog Section -->
+</div>
+  <!-- End #main -->
+{% endblock %}
