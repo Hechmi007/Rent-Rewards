@@ -4,9 +4,9 @@
         <meta charset="UTF-8">
         <title>{% block title %}Rent Rewards{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-
         {% block stylesheets %}
-    <link rel="shortcut icon" href="{{ asset('favicon.png"')}} />
+        <link rel="stylesheet href="{{ asset('build/app.css')}}" />
+    <link rel="shortcut icon" href="{{ asset('favicon.png')}} "/>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -20,6 +20,9 @@
         {% endblock %}
 
         {% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('js/tiny-slider.js') }}"></script>
     <script src="{{ asset('js/aos.js') }}"></script>
@@ -43,7 +46,7 @@
       <div class="container">
         <div class="menu-bg-wrap">
           <div class="site-navigation">
-            <a href="index.html" class="logo m-0 float-start">RentRewards</a>
+            <a href="../index.html" class="logo m-0 float-start">RentRewards</a>
 
             <ul
               class="js-clone-nav d-none d-lg-inline-block text-start site-menu float-end"
@@ -51,7 +54,7 @@
 
 
               <li class="has-children">
-                <a href="produit">Products</a>
+                <a href="products.html">Products</a>
                 <ul class="dropdown">
                   <li><a href="#">Rent Products</a></li>
                   <li><a href="#">Explore Services</a></li>
@@ -66,7 +69,7 @@
                 </ul>
                           
                 <li class="has-children">
-                <a href="produit">Community</a>
+                <a href="products.html">Community</a>
                 <ul class="dropdown">
                   <li><a href="#">Blog</a></li>
                   <li><a href="#">Complain Center</a></li>
@@ -81,9 +84,9 @@
                 </ul>
   
               <li><a href="services.html">Rewards</a></li>
-              <li><a href="about.html">About</a></li>
+              <li><a href="products/view">About</a></li>
               <li><a href="contact.html">Charity</a></li>
-              <li><a href="about.html">Login</a></li>
+              <li><a href="/products">Login</a></li>
             </ul>
 
             <a
@@ -123,8 +126,6 @@
         </div>
       </div>
     </div>
-
-    
         {% block body %}
 
     <div class="section">
@@ -559,7 +560,7 @@
             <div class="item">
               <div class="testimonial">
                 <img
-                  src="images/person_1-min.jpg"
+                  src="{{ asset('dashboard/img/user.jpg')}}"
                   alt="Image"
                   class="img-fluid rounded-circle w-25 mb-4"
                 />
@@ -586,7 +587,7 @@
             <div class="item">
               <div class="testimonial">
                 <img
-                  src="{{ asset('images/person_2-min.jpg') }}"
+                  src="{{ asset('dashboard/img/user.jpg')}}"
                   alt="Image"
                   class="img-fluid rounded-circle w-25 mb-4"
                 />
@@ -613,7 +614,7 @@
             <div class="item">
               <div class="testimonial">
                 <img
-                  src="images/person_3-min.jpg"
+                  src="{{ asset('dashboard/img/user.jpg')}}"
                   alt="Image"
                   class="img-fluid rounded-circle w-25 mb-4"
                 />
@@ -808,29 +809,27 @@
               Our Agents
             </h2>
             <p class="text-black-50">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam
-              enim pariatur similique debitis vel nisi qui reprehenderit totam?
-              Quod maiores.
-            </p>
+You can Ask an Expert.
+Our experts stand ready to answer your complex Financial questions.</p>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0">
             <div class="h-100 person">
               <img
-                src="images/person_1-min.jpg"
+                src="{{ asset('dashboard/img/user.jpg')}}"
                 alt="Image"
                 class="img-fluid"
               />
 
               <div class="person-contents">
-                <h2 class="mb-0"><a href="#">James Doe</a></h2>
+                <h2 class="mb-0"><a href="#">Dali Guidara</a></h2>
                 <span class="meta d-block mb-3">Real Estate Agent</span>
                 <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Facere officiis inventore cumque tenetur laboriosam, minus
-                  culpa doloremque odio, neque molestias?
-                </p>
+I bring a unique combination of technical expertise and business acumen to help 
+organizations achieve their goals. With years of experience in the field, I have 
+developed a deep understanding of the latest technologies, trends, and best practices 
+in the industry.                </p>
 
                 <ul class="social list-unstyled list-inline dark-hover">
                   <li class="list-inline-item">
@@ -852,19 +851,19 @@
           <div class="col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0">
             <div class="h-100 person">
               <img
-                src="{{ asset('images/person_2-min.jpg') }}"
+                src="{{ asset('dashboard/img/user.jpg')}}"
                 alt="Image"
                 class="img-fluid"
               />
 
               <div class="person-contents">
-                <h2 class="mb-0"><a href="#">Jean Smith</a></h2>
+                <h2 class="mb-0"><a href="#">Mohamed Nour</a></h2>
                 <span class="meta d-block mb-3">Real Estate Agent</span>
                 <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Facere officiis inventore cumque tenetur laboriosam, minus
-                  culpa doloremque odio, neque molestias?
-                </p>
+I bring a unique combination of technical expertise and business acumen to help 
+organizations achieve their goals. With years of experience in the field, I have 
+developed a deep understanding of the latest technologies, trends, and best practices 
+in the industry.                </p>
 
                 <ul class="social list-unstyled list-inline dark-hover">
                   <li class="list-inline-item">
@@ -886,19 +885,19 @@
           <div class="col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0">
             <div class="h-100 person">
               <img
-                src="images/person_3-min.jpg"
+                src="{{ asset('dashboard/img/user.jpg')}}"
                 alt="Image"
                 class="img-fluid"
               />
 
               <div class="person-contents">
-                <h2 class="mb-0"><a href="#">Alicia Huston</a></h2>
+                <h2 class="mb-0"><a href="#">Hechmi Rebah</a></h2>
                 <span class="meta d-block mb-3">Real Estate Agent</span>
                 <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Facere officiis inventore cumque tenetur laboriosam, minus
-                  culpa doloremque odio, neque molestias?
-                </p>
+I bring a unique combination of technical expertise and business acumen to help 
+organizations achieve their goals. With years of experience in the field, I have 
+developed a deep understanding of the latest technologies, trends, and best practices 
+in the industry.                </p>
 
                 <ul class="social list-unstyled list-inline dark-hover">
                   <li class="list-inline-item">
@@ -927,12 +926,12 @@
           <div class="col-lg-4">
             <div class="widget">
               <h3>Contact</h3>
-              <address>43 Raymouth Rd. Baltemoer, London 3910</address>
+              <address>Le Bardo Tunis, 2000, Tunisia</address>
               <ul class="list-unstyled links">
-                <li><a href="tel://11234567890">+1(123)-456-7890</a></li>
-                <li><a href="tel://11234567890">+1(123)-456-7890</a></li>
+                <li><a href="tel://21628101032">+21628101032</a></li>
+                <li><a href="tel://21628101032">+1(123)-456-7890</a></li>
                 <li>
-                  <a href="mailto:info@mydomain.com">info@mydomain.com</a>
+                  <a href="mailto:mohamed.nour@esprit.tn">mohamed.nour@esprit.tn</a>
                 </li>
               </ul>
             </div>
