@@ -1,0 +1,49 @@
+<div class="container">
+<table>
+{{ form_start(form,{'atr':{'novalidate':'novalidate'}}) }}
+<tr>
+<div class="mb-3">
+    <td>{{ form_label(form.nomproduit,"Product Name:") }}</td>
+    <td>{{ form_widget(form.nomproduit,{'atr':{'class':'form-control'}}) }}</td>
+    <td>{% if form_errors(form.nomproduit) is not empty %}</td>
+    <div class="alert alter-danger"
+    <td>{{ form_errors(form.nomproduit) }}</td>
+    </div>
+</tr>
+    {% endif %}
+</div>
+<tr>
+<div class="input-group mb-3">
+    <td>{{ form_label(form.prixproduit,"Renting Price:") }}</td>
+    <td>{{ form_widget(form.prixproduit,{'atr':{'class':'input-group mb-3'}}) }}</td>
+    <td><span class="input-group-text">TND</span>
+    <td>{% if form_errors(form.prixproduit) is not empty %}</td>
+    <div class="alert alter-danger"
+    <td>{{ form_errors(form.prixproduit) }}</td> </div>
+    {% endif %}
+    </tr>
+</div>
+<tr>
+<div class="mb-3">
+    <td>{{ form_label(form.dateproduit,"Availability Date:") }}</td>
+    <td>{{ form_widget(form.dateproduit,{'atr':{'class':'mb-3'}}) }}</td>
+    <td>{% if form_errors(form.dateproduit) is not empty %}</td>
+    <div class="alert alter-danger"
+   <td> {{ form_errors(form.dateproduit) }}</td> </div>
+    {% endif %}
+ </tr>
+</div>
+<tr>
+<div class="mb-3">
+    <td>{{ form_label(form.type,"Product Type:") }}</td>
+    <td>{{ form_widget(form.type,{'atr':{'class':'form-control'}}) }}</td>
+    <td>{% if form_errors(form.type) is not empty %}</td>
+    <div class="alert alter-danger"
+    <td>{{ form_errors(form.type) }}</div></td>
+    {% endif %}
+ </tr>
+</div>
+</table>
+    <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
+</div>

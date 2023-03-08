@@ -1,0 +1,15 @@
+{% block body %}
+    <div style="color: #000; border: 1px solid #ccc; padding: 20px; text-align: center;">
+        <h1 style="color: green; margin-top: 0;">RentRewards</h1>
+        {% if app.user is not null %}
+            <p style="font-size: 18px; margin-bottom: 20px;">Dear {{ app.user.username }},</p>
+        {% endif %}
+        <p style="font-size: 16px; margin-bottom: 20px;">Thank you for signing up for our Site! Before you can start using your account, please confirm your email address by clicking the following button:</p>
+        {% if url is not null %}
+            <p style="margin-bottom: 20px;"><a href="{{ url }}" style="display: inline-block; background-color: #007bff; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Confirm Your Email</a></p>
+        {% endif %}
+        <p style="font-size: 16px; margin-bottom: 20px;">If you did not create an account on our Site, please disregard this email.</p>
+        <hr style="border: none; border-bottom: 2px solid #eee; margin: 20px 0;">
+        <p style="font-size: 14px; color: #777;">This email was sent by Site Team. If you have any questions, please contact us at <a href="mailto:RentRewards@gmail.com" style="color: #007bff; text-decoration: none;">RentRewards@gmail.com</a>.</p>
+    </div>
+{% endblock %}

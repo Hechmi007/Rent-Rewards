@@ -1,0 +1,51 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+user_index:
+    path: /user
+    controller: App\Controller\UserController::index
+home:
+    path: /home
+    controller: App\Controller\HomeController::index
+login:
+    path: /login
+    controller: App\Controller\SecurityController::index
+wallet:
+    path: /wallet
+    methods: ['GET', 'POST']
+    defaults:
+        _controller: 'App\Controller\WalletController::index'
+        userRepository: '@App\Repository\UserRepository'
+app_wallet_show:
+    path: /wallets/{id}
+    controller: App\Controller\WalletController::show
+app_wallet_delete:
+    path: /wallets/{id}
+    controller: App\Controller\WalletController::delete
+app_wallet_edit:
+    path: /wallets/{id}
+    controller: App\Controller\WalletController::edit
+confirm_email:
+    path: '/confirm-email/{token}'
+    controller: App\Controller\RegistrationController::confirmEmail
+    methods: ['GET']
+facebook_login:
+    path: /login/facebook
+    controller: App\Controller\SecurityController::facebookLogin
+facebook_login_check:
+    path: /login/facebook-check
+profile:
+    path: /profile
+    controller: App\Controller\ProfileController::index
+    methods: [GET]
+    # Require authentication
+modify_profile:
+    path: /profile/modify
+    controller: App\Controller\ProfileController::modify
+    methods: [GET, POST]
+    # Require authentication
+delete_profile:
+    path: /profile/delete
+    controller: App\Controller\ProfileController::delete
+    methods: [POST]
+    # Require authentication
