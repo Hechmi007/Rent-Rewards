@@ -3,27 +3,29 @@
 namespace App\Entity;
 
 use App\Repository\WalletRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: WalletRepository::class)]
 class Wallet
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\GeneratedValue(strategy: "AUTO")]
+    #[ORM\Column(type: "integer", options: ["unsigned" => true, "auto_increment" => 1000])]
     private ?int $id = null;
-
-    #[ORM\Column]
+    
+    #[ORM\Column(nullable: true)]
     private ?float $solde = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?float $points = null;
-
-    #[ORM\Column(length: 255)]
+ 
+    #[ORM\Column(nullable: true,length: 255)]
     private ?string $plan = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?User $username = null;
+
 
     public function getId(): ?int
     {
@@ -77,4 +79,6 @@ class Wallet
 
         return $this;
     }
+
+    
 }

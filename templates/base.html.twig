@@ -47,14 +47,11 @@
         {% endblock %}
 
         {% block javascripts %}
-<<<<<<< HEAD
-  
 
-=======
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
->>>>>>> main
+
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('js/tiny-slider.js') }}"></script>
     <script src="{{ asset('js/aos.js') }}"></script>
@@ -119,7 +116,7 @@
                 <a href="products.html">Community</a>
                 <ul class="dropdown">
                   <li><a href="{{ path('app_show_all', {'page': 1, 'nbr': 10, 'sort': 'title_asc'}) }}">Blog</a></li>
-                  <li><a href="#">Complain Center</a></li>
+                  <li><a href="#">Complaint Center</a></li>
                   <li class="has-children">
                     <a href="#">Dropdown</a>
                     <ul class="dropdown">
@@ -131,21 +128,41 @@
                 </ul>
   
               <li><a href="services.html">Rewards</a></li>
-<<<<<<< HEAD
+
               <li><a href="{{ path('app_show_all', {'page': 1, 'nbr': 10, 'sort': 'title_asc'}) }}">Blog</a></li>
               <li><a href="contact.html">Charity</a></li>
-               {% if app.user %}
-                <li><a href="app_post_index">{{ app.user.username }}</a></li>
-              {% else %}
-                <li><a href="app_post_index">Login</a></li>
-              {% endif %} 
+               
+               <li class="has-children">
+                <a class="nav-link" href="{{ path('home') }}">
+                {% if app.user %}
+                 {{ app.user.username }}
+                 
+                {% else %}
+                Login
+                {% endif %}
+                 </a>
+
+                <ul class="dropdown">
+                  <li>{% if app.user %}
+                  <a href="{{ path('profile') }}">Profile</a>
+                 <a href="{{ path('app_wallet_index') }}">My Wallet</a>
+                  <a href="{{ path('app_logout') }}">Logout</a>
+
+
+                  {% else %}
+                  <a href="{{ path('app_register') }}">Sign Up</a>
+                  {% endif %}
+                  </li>
+                 {% if is_granted('ROLE_ADMIN') %}
+                 <a href="{{ path('user_index') }}">Control Panel</a>
+
+                 {% else %}
+                 {% endif %}
+
+                </li>
 
               
-=======
-              <li><a href="products/view">About</a></li>
-              <li><a href="contact.html">Charity</a></li>
-              <li><a href="/products">Login</a></li>
->>>>>>> main
+
             </ul>
             
 

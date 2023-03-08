@@ -5,42 +5,74 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+class User implements UserInterface , PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180, unique: true)]
+        
+    #[ORM\Column(type:"string", nullable:true)] 
+    private $resetToken;
+    
+    #[ORM\Column(type:"boolean")] 
+    private $EmailVerified = false;
+
+    #[ORM\Column(type:"boolean")]
+    private $banned= false;
+
+    #[ORM\Column(type:"string", length:55, nullable:true)] 
+    private $confirmationToken;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"please insert you username")]
     private ?string $username = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::ARRAY)]
+    #[Assert\NotBlank(message:"you should choose")]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"please insert a username")]
+    private ?string $email = null;
+
+    
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"this field should not be empty")]
     private ?string $password = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: CommentLike::class)]
-    private Collection $commentLikes;
 
-    #[ORM\OneToMany(mappedBy: 'username', targetEntity: Report::class)]
-    private Collection $reports;
+    #[ORM\OneToOne(targetEntity: Wallet::class, mappedBy:'username', cascade: ['persist', 'remove'])]
+    private ?Wallet $wallet = null;
+
+    #[ORM\OneToMany(mappedBy: 'username', targetEntity: Post::class)]
+    private Collection $Author;
+
+    #[ORM\OneToMany(mappedBy: 'username', targetEntity: Comment::class, orphanRemoval: true)]
+    private Collection $comments;
+
+    #[ORM\OneToMany(mappedBy: 'username', targetEntity: CharityDemand::class)]
+    private Collection $charityDemands;
+
+    #[ORM\OneToMany(mappedBy: 'username', targetEntity: Donation::class)]
+    private Collection $donations;
+
+   
 
     public function __construct()
     {
-        $this->commentLikes = new ArrayCollection();
-        $this->reports = new ArrayCollection();
+        $this->Author = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->charityDemands = new ArrayCollection();
+        $this->donations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -48,16 +80,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    /**
-     * @deprecated since Symfony 5.3, use getUserIdentifier instead
-     */
-    public function getUsername(): string
+    public function getUsername(): ?string
     {
-        return (string) $this->username;
-    }
-    public function __toString(): string
-    {
-        return $this->getUsername();
+        return $this->username;
     }
 
     public function setUsername(string $username): self
@@ -67,26 +92,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
-    public function getUserIdentifier(): string
-    {
-        return (string) $this->username;
-    }
-
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+        return $this->roles;
     }
 
     public function setRoles(array $roles): self
@@ -96,10 +104,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
-    public function getPassword(): string
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -110,16 +127,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
+    
     /**
-     * Returning a salt is only needed, if you are not using a modern
-     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
-     *
      * @see UserInterface
      */
-    public function getSalt(): ?string
+    public function getSalt()
     {
-        return null;
+        // not needed when using the "bcrypt" algorithm in security.yaml
     }
 
     /**
@@ -132,29 +146,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, CommentLike>
+     * @return Collection<int, Post>
      */
-    public function getCommentLikes(): Collection
+    public function getAuthor(): Collection
     {
-        return $this->commentLikes;
+        return $this->Author;
     }
 
-    public function addCommentLike(CommentLike $commentLike): self
+    public function addAuthor(Post $author): self
     {
-        if (!$this->commentLikes->contains($commentLike)) {
-            $this->commentLikes->add($commentLike);
-            $commentLike->setUser($this);
+        if (!$this->Author->contains($author)) {
+            $this->Author->add($author);
+            $author->setUsername($this);
         }
 
         return $this;
     }
 
-    public function removeCommentLike(CommentLike $commentLike): self
+    public function removeAuthor(Post $author): self
     {
-        if ($this->commentLikes->removeElement($commentLike)) {
+        if ($this->Author->removeElement($author)) {
             // set the owning side to null (unless already changed)
-            if ($commentLike->getUser() === $this) {
-                $commentLike->setUser(null);
+            if ($author->getUsername() === $this) {
+                $author->setUsername(null);
             }
         }
 
@@ -162,32 +176,162 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Report>
+     * @return Collection<int, Comment>
      */
-    public function getReports(): Collection
+    public function getComments(): Collection
     {
-        return $this->reports;
+        return $this->comments;
     }
 
-    public function addReport(Report $report): self
+    public function addComment(Comment $comment): self
     {
-        if (!$this->reports->contains($report)) {
-            $this->reports->add($report);
-            $report->setUsername($this);
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setUsername($this);
         }
 
         return $this;
     }
 
-    public function removeReport(Report $report): self
+    public function removeComment(Comment $comment): self
     {
-        if ($this->reports->removeElement($report)) {
+        if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
-            if ($report->getUsername() === $this) {
-                $report->setUsername(null);
+            if ($comment->getUsername() === $this) {
+                $comment->setUsername(null);
             }
         }
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, CharityDemand>
+     */
+    public function getCharityDemands(): Collection
+    {
+        return $this->charityDemands;
+    }
+
+    public function addCharityDemand(CharityDemand $charityDemand): self
+    {
+        if (!$this->charityDemands->contains($charityDemand)) {
+            $this->charityDemands->add($charityDemand);
+            $charityDemand->setUsername($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCharityDemand(CharityDemand $charityDemand): self
+    {
+        if ($this->charityDemands->removeElement($charityDemand)) {
+            // set the owning side to null (unless already changed)
+            if ($charityDemand->getUsername() === $this) {
+                $charityDemand->setUsername(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Donation>
+     */
+    public function getDonations(): Collection
+    {
+        return $this->donations;
+    }
+
+    public function addDonation(Donation $donation): self
+    {
+        if (!$this->donations->contains($donation)) {
+            $this->donations->add($donation);
+            $donation->setUsername($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDonation(Donation $donation): self
+    {
+        if ($this->donations->removeElement($donation)) {
+            // set the owning side to null (unless already changed)
+            if ($donation->getUsername() === $this) {
+                $donation->setUsername(null);
+            }
+        }
+
+        return $this;
+    }
+    public function getWallet(): ?Wallet
+    {
+        return $this->wallet;
+    }
+
+    public function setWallet(?Wallet $wallet): self
+    {
+        $this->wallet = $wallet;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $wallet->getUsername()) {
+            $wallet->setUsername($this);
+        }
+
+        return $this;
+    }
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): self
+    {
+        $this->resetToken = $resetToken;
+
+        return $this;
+    }
+    public function getEmailVerified(): bool
+    {
+        return $this->EmailVerified;
+    }
+
+    public function setEmailVerified(bool $EmailVerified): self
+    {
+        $this->EmailVerified = $EmailVerified;
+
+        return $this;
+    }
+
+    public function getConfirmationToken(): ?string
+    {
+        return $this->confirmationToken;
+    }
+
+    public function setConfirmationToken(?string $confirmationToken): self
+    {
+        $this->confirmationToken = $confirmationToken;
+
+        return $this;
+    }
+    public function isBanned(): bool
+    {
+        return $this->banned;
+    }
+    public function getBanned(): bool
+    {
+        return $this->banned;
+    }
+    public function setBanned(bool $banned): self
+    {
+        $this->banned = $banned;
+
+        return $this;
+    }
+    public function __toString(): string
+{
+    return $this->getUsername();
+}
+
+
 }

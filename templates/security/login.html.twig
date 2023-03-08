@@ -3,22 +3,25 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-<form method="post">
+<form method="post" novalidate>
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
 
     {% if app.user %}
         <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
         </div>
     {% endif %}
 
     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputUsername">Username</label>
-    <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" autocomplete="username" required autofocus>
+    <label for="inputEmail">Email</label>
+    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+    <span id="email-error" style="display:none; color:red;">Please insert your email</span>
+
     <label for="inputPassword">Password</label>
     <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+ <span id="password-error" style="display:none; color:red;">Please insert your password</span>
 
     <input type="hidden" name="_csrf_token"
            value="{{ csrf_token('authenticate') }}"
@@ -34,9 +37,64 @@
             </label>
         </div>
     #}
-
-    <button class="btn btn-lg btn-primary" type="submit">
+    <button class="btn btn-lg btn-primary" type="submit" onclick="return validateLoginForm();">
         Sign in
     </button>
+      <a href="{{ path('app_forgot_password') }}" class="btn btn-link">Forgot Password?</a>
+      {# facebook login #}
+{% if facebook_login_enabled %}
+    <hr>
+    <div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v12.0&appId=896984404840648&autoLogAppEvents=1" nonce="GQcWi3KX"></script>
+<div class="fb-login-button" data-size="large" data-button-type="login_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="true" data-scope="public_profile,email" onlogin="checkLoginState();"></div>    <script>
+    function checkLoginState() {
+        FB.getLoginStatus(function(response) {
+            statusChangeCallback(response);
+        });
+    }
+
+    function statusChangeCallback(response) {
+        if (response.status === 'connected') {
+            // User is logged in with Facebook, perform login with Symfony
+            var accessToken = response.authResponse.accessToken;
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '{{ path('facebook_login_check') }}');
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    window.location = xhr.responseURL;
+                }
+            };
+            xhr.send('access_token=' + accessToken);
+        }
+    }
+    </script>
+    {% endif %}
 </form>
+<script>
+function validateLoginForm() {
+    var email = document.getElementById('inputEmail');
+    var password = document.getElementById('inputPassword');
+    var emailError = document.getElementById('email-error');
+    var passwordError = document.getElementById('password-error');
+    
+    if (email.value == '') {
+        emailError.style.display = 'block';
+        return false;
+    }
+    else {
+        emailError.style.display = 'none';
+    }
+    
+    if (password.value == '') {
+        passwordError.style.display = 'block';
+        return false;
+    }
+    else {
+        passwordError.style.display = 'none';
+    }
+    
+    return true;
+}
+</script>
 {% endblock %}

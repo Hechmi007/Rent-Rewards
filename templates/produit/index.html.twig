@@ -28,6 +28,15 @@
                 <td>
                     <a class ="btn btn-primary" href="{{ path('app_produit_show', {'id': produit.id}) }}">show</a>
                     <a class ="btn btn-primary" href="{{ path('app_produit_edit', {'id': produit.id}) }}">edit</a>
+                    
+                    <a href="{{ path('app_produit_show', {'id': produit.id}) }}">show</a>
+                    <a href="{{ path('app_produit_edit', {'id': produit.id}) }}">edit</a>
+
+
+                    <a class ="btn btn-primary" href="{{ path('app_produit_show', {'id': produit.id}) }}">show</a>
+                    <a class ="btn btn-primary" href="{{ path('app_produit_edit', {'id': produit.id}) }}">edit</a>
+                    
+
                 </td>
             </tr>
         {% else %}
