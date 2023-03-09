@@ -1,0 +1,4 @@
+# config/routes.yaml
+app_fidelity_card_send_email:
+  path: '/fidelity/card/{id}/send-email'
+  controller: App\Controller\FidelityCardController::sendEmail

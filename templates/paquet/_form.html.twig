@@ -1,0 +1,69 @@
+<div class="container">
+    {{ form_start(form , {'attr':{'novalidate':'novalidate'}}) }}
+    <div class="form-group">
+        {{ form_label(form.NomPacks,"Packet Name")  }}
+        {{ form_widget(form.NomPacks , {'attr':{'class':'form-control'} }) }}
+        {% if form_errors(form.NomPacks) is not empty %}
+            <div class="alert alert-danger"> 
+                {{ form_errors(form.NomPacks) }}
+            </div>
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.Discribtion,"discription de Packet")  }}
+        {{ form_widget(form.Discribtion , {'attr':{'class':'form-control'} }) }}
+        {% if form_errors(form.Discribtion) is not empty %}
+            <div class="alert alert-danger"> 
+                {{ form_errors(form.Discribtion) }}
+            </div>
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.DateDebutPacks,"Date debut")  }}
+        {{ form_widget(form.DateDebutPacks , {'attr':{'class':'form-control'} }) }}
+        <div class="alert alert-danger"> 
+            {{ form_errors(form.DateDebutPacks) }}
+        </div>
+    </div>
+    <div class="form-group">
+        {{ form_label(form.DateFinPacks,"Date Fin")  }}
+        {{ form_widget(form.DateFinPacks , {'attr':{'class':'form-control'} }) }}
+        <div class="alert alert-danger"> 
+            {{ form_errors(form.DateFinPacks) }}
+        </div>
+    </div>
+   <br>
+    <div class="form-group">
+        {{ form_label(form.EtatPacks,"Etat de Packet")  }}
+        {{ form_widget(form.EtatPacks , {'attr':{'class':'form-control'} }) }}
+        {% if form_errors(form.EtatPacks) is not empty %}
+            <div class="alert alert-danger"> 
+                {{ form_errors(form.EtatPacks) }}
+            </div>
+        {% endif %}    
+    </div> 
+    <br>
+     <div class="form-group">
+        {{ form_label(form.TypePacks,"Type de packs")  }}
+        {{ form_widget(form.TypePacks , {'attr':{'class':'form-control'} }) }}
+        {% if form_errors(form.TypePacks) is not empty %}
+            <div class="alert alert-danger"> 
+                {{ form_errors(form.TypePacks) }}
+            </div>
+        {% endif %} 
+        </div>
+         <div class="form-group">
+        {{ form_label(form.Numcarte,"Numero de carte")  }}
+        {{ form_widget(form.Numcarte , {'attr':{'class':'form-control'} }) }}
+        {% if form_errors(form.Numcarte) is not empty %}
+            <div class="alert alert-danger"> 
+                {{ form_errors(form.Numcarte) }}
+            </div>
+        {% endif %}
+        </div>
+       <br>    
+    </div>
+        <button class="btn btn-primary text-white py-3 px-4"  class="btn">{{ Button_label|default('Save') }}</button>
+    {{ form_end(form) }}
+    
+    </di> 

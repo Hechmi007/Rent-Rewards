@@ -1,0 +1,51 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Paquet{% endblock %}
+
+{% block body %}
+    <h1>Paquet</h1>
+
+     <div class="table-responsive">
+		<table class="table table-primary align-middle">
+			<thead class="table table-dark">
+            <tr>
+                <th>Id</th>
+                <td>{{ paquet.id }}</td>
+            </tr>
+            <tr>
+                <th>NomPacks</th>
+                <td>{{ paquet.NomPacks }}</td>
+            </tr>
+            <tr>
+                <th>Discribtion</th>
+                <td>{{ paquet.Discribtion }}</td>
+            </tr>
+            <tr>
+                <th>DateDebutPacks</th>
+                <td>{{ paquet.DateDebutPacks ? paquet.DateDebutPacks|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>DateFinPacks</th>
+                <td>{{ paquet.DateFinPacks ? paquet.DateFinPacks|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>EtatPacks</th>
+                <td>{{ paquet.EtatPacks ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>TypePacks</th>
+                <td>{{ paquet.TypePacks }}</td>
+            </tr>
+            <tr>
+                <th>Image</th>
+                <td><img src="{{ asset('/uploads/images/' ~ paquet.FileUpload) }}" style="width: 30%; height: auto;"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_paquet_index') }}">back to list</a>
+
+    <a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_paquet_edit', {'id': paquet.id}) }}">edit</a>
+
+    {{ include('paquet/_delete_form.html.twig') }}
+{% endblock %}

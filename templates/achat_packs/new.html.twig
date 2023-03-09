@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New AchatPacks{% endblock %}
+
+{% block body %}
+{% if app.request.method == 'POST' and app.request.request.get('purchase') == 'true' %}
+		{# Perform action when the button is clicked #}
+
+		
+
+		<center><img src="{{ asset('/uploads/images/' ~ paquet.FileUpload) }}" style="width: 20%; height: auto;">
+		</center>
+       <center><h1><span>{{paquet.NomPacks}}</span></h1></center>
+        <center><h2><span class="d-block mb-2 text-black-50">{{paquet.Discribtion}}</span></h2></center>
+	{% endif %}
+    <h1>Create new AchatPacks</h1>
+
+    {{ include('achat_packs/_form.html.twig') }}
+
+    <a href="{{ path('app_achat_packs_index') }}">back to list</a>
+{% endblock %}

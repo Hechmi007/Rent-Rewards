@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}AchatPacks index{% endblock %}
+
+{% block body %}
+    <h1>AchatPacks index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Date</th>
+                <th>PackName</th>
+                <th>PaquetName</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for achat_pack in achat_packs %}
+            <tr>
+                <td>{{ achat_pack.id }}</td>
+                <td>{{ achat_pack.Date ? achat_pack.Date|date('Y-m-d') : '' }}</td>
+                <td>{{ achat_pack.PackName }}</td>
+                <td>{{ achat_pack.PaquetName }}</td>
+                <td>
+                    <a href="{{ path('app_achat_packs_show', {'id': achat_pack.id}) }}">show</a>
+                    <a href="{{ path('app_achat_packs_edit', {'id': achat_pack.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_achat_packs_new') }}">Create new</a>
+{% endblock %}

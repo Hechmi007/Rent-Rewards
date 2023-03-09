@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Billing{% endblock %}
+
+{% block body %}
+    <h1><center>All Bills</h1>
+<br>
+<br>
+<div class="table-responsive">
+    <table class="table table-primary align-middle">
+        <thead class="table table-dark">
+                <th>Id</th>
+                <th>ProductID</th>
+                <th>Product Name</th>
+                <th>Client ID</th>
+                <th>Product Price</th>
+                <th>TVA</th>
+                <th>Total</th>
+                <th>Locataire ID</th>
+                <th>Bill Date</th>
+                <th>Adress</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for facture in factures %}
+            <tr>
+                <td>{{ facture.id }}</td>
+                <td>{{ facture.IDproduit }}</td>
+                <td>{{ facture.nomproduit }}</td>
+                <td>{{ facture.IDClient }}</td>
+                <td>{{ facture.prixproduit }}</td>
+                <td>{{ facture.TVA }}</td>
+                <td>{{ facture.totalfacture }}</td>
+                <td>{{ facture.IDLocataire }}</td>
+                <td>{{ facture.DateFacture ? facture.DateFacture|date('Y-m-d') : '' }}</td>
+                <td>{{ facture.Adressfacture }}</td>
+                <td>
+                    <a class="btn btn-primary" href= "{{ path('app_facture_show', {'id': facture.id}) }}">show</a>
+                    <a class="btn btn-primary" href="{{ path('app_facture_edit', {'id': facture.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a class="btn btn-primary" href="{{ path('app_facture_new') }}">Create new</a>
+{% endblock %}

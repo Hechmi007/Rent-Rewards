@@ -1,0 +1,50 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Paquet index{% endblock %}
+
+{% block body %}
+    <h1>Paquet index</h1>
+
+   <div class="table-responsive">
+		<table class="table table-primary align-middle">
+			<thead class="table table-dark">
+            <tr>
+                <th>Id</th>
+                <th>NomPacks</th>
+                <th>Discribtion</th>
+                <th>DateDebutPacks</th>
+                <th>DateFinPacks</th>
+                <th>EtatPacks</th>
+                <th>TypePacks</th>
+                <th>Images</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for paquet in paquets %}
+            <tr>
+                <td>{{ paquet.id }}</td>
+                <td>{{ paquet.NomPacks }}</td>
+                <td>{{ paquet.Discribtion }}</td>
+                <td>{{ paquet.DateDebutPacks ? paquet.DateDebutPacks|date('Y-m-d') : '' }}</td>
+                <td>{{ paquet.DateFinPacks ? paquet.DateFinPacks|date('Y-m-d') : '' }}</td>
+                <td>{{ paquet.EtatPacks ? 'Yes' : 'No' }}</td>
+                <td>{{ paquet.TypePacks }}</td>
+                <td><img src="{{ asset('/uploads/images/' ~ paquet.FileUpload) }}" style="width: 50%; height: auto;"></td>
+                <td>
+                    <a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_paquet_show', {'id': paquet.id}) }}">show</a>
+                    <a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_paquet_edit', {'id': paquet.id}) }}">edit</a>
+                                        <a class="btn btn-primary text-white py-3 px-4" href="/pdf/generator">pdf</a>
+
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_paquet_new') }}">Create new</a>
+{% endblock %}

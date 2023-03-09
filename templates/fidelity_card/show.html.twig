@@ -1,0 +1,35 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}FidelityCard{% endblock %}
+
+{% block body %}
+    <h1>FidelityCard</h1>
+
+    <div class="table-responsive">
+		<table class="table table-primary align-middle">
+			<thead class="table table-dark">
+            <tr>
+                <th>Id</th>
+                <td>{{ fidelity_card.id }}</td>
+            </tr>
+            <tr>
+                <th>Numcarte</th>
+                <td>{{ fidelity_card.numcarte }}</td>
+            </tr>
+            <tr>
+                <th>Datedebut</th>
+                <td>{{ fidelity_card.datedebut ? fidelity_card.datedebut|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Datefin</th>
+                <td>{{ fidelity_card.datefin ? fidelity_card.datefin|date('Y-m-d') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_fidelity_card_index') }}">back to list</a>
+
+    <aclass="btn btn-primary text-white py-3 px-4" href="{{ path('app_fidelity_card_edit', {'id': fidelity_card.id}) }}">edit</a>
+
+    {{ include('fidelity_card/_delete_form.html.twig') }}
+{% endblock %}

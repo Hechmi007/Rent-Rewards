@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}FidelityCard index{% endblock %}
+
+{% block body %}
+    <h1>FidelityCard index</h1>
+
+    <div class="table-responsive">
+		<table class="table table-primary align-middle">
+			<thead class="table table-dark">
+            <tr>
+                <th>Id</th>
+                <th>Numcarte</th>
+                <th>Datedebut</th>
+                <th>Datefin</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for fidelity_card in fidelity_cards %}
+            <tr>
+                <td>{{ fidelity_card.id }}</td>
+                <td>{{ fidelity_card.numcarte }}</td>
+                <td>{{ fidelity_card.datedebut ? fidelity_card.datedebut|date('Y-m-d') : '' }}</td>
+                <td>{{ fidelity_card.datefin ? fidelity_card.datefin|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_fidelity_card_show', {'id': fidelity_card.id}) }}">show</a>
+                    <a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_fidelity_card_edit', {'id': fidelity_card.id}) }}">edit</a>
+                    <a class="btn btn-primary text-white py-3 px-4" href="/fidelity/card/send-email">Send</a>
+
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_fidelity_card_new') }}">Create new</a>
+{% endblock %}

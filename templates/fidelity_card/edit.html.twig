@@ -1,0 +1,13 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Edit FidelityCard{% endblock %}
+
+{% block body %}
+    <h1>Edit FidelityCard</h1>
+
+    {{ include('fidelity_card/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_fidelity_card_index') }}">back to list</a>
+
+    {{ include('fidelity_card/_delete_form.html.twig') }}
+{% endblock %}

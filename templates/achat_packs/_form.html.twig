@@ -1,0 +1,14 @@
+<div class="container">
+    {{ form_start(form , {'attr':{'novalidate':'novalidate'}}) }}
+     
+    <div class="form-group">
+        {{ form_label(form.Date,"Date ")  }}
+        {{ form_widget(form.Date , {'attr':{'class':'form-control'} }) }}
+        <div class="alert alert-danger"> 
+            {{ form_errors(form.Date) }}
+        </div>
+    </div>
+    <button class="btn btn-primary text-white py-3 px-4"  class="btn">{{ Button_label|default('Save') }}</button>
+    {{ form_end(form) }}
+        
+    </di>
