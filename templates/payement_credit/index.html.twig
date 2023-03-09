@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PayementCredit index{% endblock %}
+
+{% block body %}
+    <h1>PayementCredit index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Montantpaye</th>
+                <th>Dateremboursement</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for payement_credit in payement_credits %}
+            <tr>
+                <td>{{ payement_credit.id }}</td>
+                <td>{{ payement_credit.montantpaye }}</td>
+                <td>{{ payement_credit.dateremboursement ? payement_credit.dateremboursement|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_payement_credit_show', {'id': payement_credit.id}) }}">show</a>
+                    <a href="{{ path('app_payement_credit_edit', {'id': payement_credit.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_payement_credit_new') }}">Create new</a>
+{% endblock %}

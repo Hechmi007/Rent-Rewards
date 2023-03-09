@@ -1,0 +1,73 @@
+{% block body %}
+    <h6>Tunis le {{ 'now'|date('d - m -Y') }}</h6>
+    <h5 style="color:#03AB09"><center>Thanks For Renting With Us</center></h5>
+    <h1 style="color:#09526E"><center>INVOICE N:{{product.id}}</center></h1>
+    <table>
+        <tbody>
+            <tr>
+                <th style="width:50%;border-width:1px;border-style:solid;border-color:#000000;color:#037DAB;"> Invoice Date:</th>
+                <td style="width:50%;border-width:1px;border-style:solid;border-color:#000000;"> {{ 'now'|date('d - m -Y') }}</td>
+            </tr>
+            <tr>
+                <th style="width:50%;border-width:1px;border-style:solid;border-color:#000000;color:#037DAB;"> Product REF:</th>
+                <td style="width:50%;border-width:1px;border-style:solid;border-color:#000000;"> {{ product.id }}</td>
+            </tr>
+            <tr>
+                <th style="width:50%;border-width:1px;border-style:solid;border-color:#000000;color:#037DAB;"> Product Name:</th>
+                <td style="width:50%;border-width:1px;border-style:solid;border-color:#000000;"> {{ product.productname }}</td>
+            </tr>
+            <tr>
+                <th style="width:50%;border-width:1px;border-style:solid;border-color:#000000;color:#037DAB;"> Renting Date:</th>
+                <td style="width:50%;border-width:1px;border-style:solid;border-color:#000000;"> {{ product.Availabilitydate ? product.Availabilitydate|date('d - m -Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th style="width:50%;border-width:1px;border-style:solid;border-color:#000000;color:#037DAB;"> Product Type:</th>
+                <td style="width:50%;border-width:1px;border-style:solid;border-color:#000000;"> {{ product.ProductType }}</td>
+            </tr>
+            <tr>
+                <th style="width:50%;border-width:1px;border-style:solid;border-color:#000000;color:#037DAB;"> Product Adress:</th>
+                <td style="width:50%;border-width:1px;border-style:solid;border-color:#000000;"> {{ product.ProductAdress }}</td>
+            </tr>
+            <tr>
+                <th style="width:50%;border-width:1px;border-style:solid;border-color:#000000;color:#037DAB;"> Digital Item:</th>
+                <td style="width:50%;border-width:1px;border-style:solid;border-color:#000000;"> {{ product.StillAvailable ? 'Yes' : 'No' }}</td>
+            </tr>
+
+        </tbody>
+    </table>
+<br><br>
+---------------------------------------------------------------------------------------------------------------------------------------
+       <br>
+        <table style="margin-left: auto">
+        <tbody>
+            <tr>
+                <th style="color:#037DAB;">Payment Method:</th>
+                <td>Credit Card (Stripe Gateway)</td>
+            </tr>
+            <tr>
+                <th style="color:#037DAB;">Subtotal:</th>
+                <td>{{ product.RentPrice }} TND</td>
+            </tr>
+            <tr>
+                <th style="color:#DF1919">TVA :</th>
+                <td style="color:#DF1919">19%</td>
+            </tr>
+            <tr>
+                <th>Total:</th>
+                <td>{{ product.RentPrice + (product.RentPrice * 19) / 100 }} TND</td>
+            </tr>
+        </tbody>
+        </table>
+        <br>
+        ---------------------------------------------------------------------------------------------------------------------------------------
+<br><br><br>
+        <table>
+        <tbody>
+    <tr><td> RentRewards © 2023</td> </tr>
+    <tr> <td>Ariana Tunis, 1085 Tunisia 2023</td> </tr>
+    <tr> <td>Phone: +21628101032</td> </tr>
+    <tr> <td>Email: rentrawrds@esprit.tn <td></tr>
+        </tbody>
+        </table>
+
+{% endblock %}

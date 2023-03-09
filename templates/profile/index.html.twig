@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>My Profile</h1>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Username</th>
+                <td>{{ user.username }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>role</th>
+                <td>{{ user.roles ? user.roles|join(', ') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <a href="{{ path('modify_profile') }}">Modify Profile</a>
+<form method="post" action="{{ path('delete_profile', {'id': user.id}) }}" onsubmit="return confirm('Are you sure you want to delete your account ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+    <button class="btn">Delete account</button>
+</form>
+{% endblock %}
+
+

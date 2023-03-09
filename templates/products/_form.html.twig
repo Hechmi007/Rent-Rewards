@@ -1,0 +1,82 @@
+
+<div class="container">
+<table>
+{{ form_start(form,{'attr':{'novalidate':'novalidate'}}) }}
+<tr>
+<div class="mb-3">
+    <td>{{ form_label(form.productname,"Product Name:") }}</td>
+    <td>{{ form_widget(form.productname,{'attr':{'class':'form-control'}}) }}</td>
+    <td>{% if form_errors(form.productname) is not empty %}</td>
+    <div class="alert alter-danger"
+    <td>{{ form_errors(form.productname) }}</td>
+    </div>
+</tr>
+    {% endif %}
+</div>
+<tr>
+<div class="input-group mb-3">
+    <td>{{ form_label(form.RentPrice,"Renting Price:") }}</td>
+    <td>{{ form_widget(form.RentPrice,{'attr':{'class':'input-group mb-3'}}) }}</td>
+    <td><span class="input-group-text">TND</span>
+    <td>{% if form_errors(form.RentPrice) is not empty %}</td>
+    <div class="alert alter-danger"
+    <td>{{ form_errors(form.RentPrice) }}</td> </div>
+    {% endif %}
+    </tr>
+</div>
+<tr>
+<div class="mb-3">
+
+    <td>{{ form_label(form.Availabilitydate,"Availability Date:") }}</td>
+    <td>{{ form_widget(form.Availabilitydate,{'attr':{'class':'mb-3'}}) }}</td>
+    <td>{% if form_errors(form.Availabilitydate) is not empty %}</td>
+    <div class="alert alter-danger"
+   <td> {{ form_errors(form.Availabilitydate) }}</td> </div>
+    {% endif %}
+ </tr>
+</div>
+<tr>
+<div class="mb-3">
+    <td>{{ form_label(form.ProductType,"Product Type:") }}</td>
+    <td>{{ form_widget(form.ProductType,{'attr':{'class':'form-control'}}) }}</td>
+    <td>{% if form_errors(form.ProductType) is not empty %}</td>
+    <div class="alert alter-danger"
+    <td>{{ form_errors(form.ProductType) }}</div></td>
+    {% endif %}
+ </tr>
+</div>
+<tr>
+<div class="mb-3">
+    <td>{{ form_label(form.ProductAdress,"Product Adress:") }}</td>
+    <td>{{ form_widget(form.ProductAdress,{'attr':{'class':'form-control'}}) }}</td>
+    <td>{% if form_errors(form.ProductAdress) is not empty %}</td>
+    <div class="alert alter-danger"
+    <td>{{ form_errors(form.ProductAdress) }}</div></td>
+    {% endif %}
+ </tr>
+</div>
+<tr>
+<div class="mb-3">
+    <td>{{ form_label(form.productscategory,"Category:") }}</td>
+    <td>{{ form_widget(form.productscategory,{'attr':{'class':'form-control'}}) }}</td>
+    <td>{% if form_errors(form.productscategory) is not empty %}</td>
+    <div class="alert alter-danger"
+    <td>{{ form_errors(form.productscategory) }}</div></td>
+    {% endif %}
+ </tr>
+</div>
+<tr>
+<div class="mb-3">
+    <td>{{ form_label(form.StillAvailable,"Digital:") }}</td>
+    <td>{{ form_widget(form.StillAvailable,{'attr':{'class':'form-control'}}) }}</td>
+    <td>{% if form_errors(form.StillAvailable) is not empty %}</td>
+    <div class="alert alter-danger"
+    <td>{{ form_errors(form.StillAvailable) }}</div></td>
+    {% endif %}
+ </tr>
+</div>
+</table>
+    <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
+
+</div>
