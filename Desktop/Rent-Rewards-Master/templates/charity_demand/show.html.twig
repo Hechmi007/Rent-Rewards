@@ -1,0 +1,39 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}CharityDemand{% endblock %}
+
+{% block body %}
+    <h1>CharityDemand</h1>
+
+    <div class="table-responsive">
+		<table class="table table-primary align-middle">
+			<thead class="table table-dark">
+            <tr>
+                <th>Id</th>
+                <td>{{ charity_demand.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ charity_demand.title }}</td>
+            </tr>
+            <tr>
+                <th>Receiver</th>
+                <td>{{ charity_demand.receiver }}</td>
+            </tr>
+            <tr>
+                <th>Pointsdemanded</th>
+                <td>{{ charity_demand.pointsdemanded }}</td>
+            </tr>
+            <tr>
+                <th>Datedemand</th>
+                <td>{{ charity_demand.datedemand ? charity_demand.datedemand|date('Y-m-d') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_charity_demand_index') }}"><center>back to list</a>
+
+    <a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_charity_demand_edit', {'id': charity_demand.id}) }}">edit</a>
+
+    {{ include('charity_demand/_delete_form.html.twig') }}
+{% endblock %}

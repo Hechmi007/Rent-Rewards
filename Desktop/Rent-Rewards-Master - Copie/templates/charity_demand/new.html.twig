@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New CharityDemand{% endblock %}
+
+{% block body %}
+    <h1><center><color='red'>Create new CharityDemand</h1>
+
+    {{ include('charity_demand/_form.html.twig') }}
+
+    <a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_charity_demand_index') }}"><center>back to list</a>
+{% endblock %}

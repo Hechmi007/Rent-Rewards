@@ -1,0 +1,83 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}CharityDemand index
+{% endblock %}
+
+{% block body %}
+	<h1>CharityDemand index</h1>
+
+	<div class="table-responsive">
+		<table class="table table-primary align-middle" id="mytable">
+			<thead class="table table-dark">
+				<tr>
+					<th>Id</th>
+					<th>Title</th>
+					<th>Receiver</th>
+					<th>Pointsdemanded</th>
+					<th>category</th>
+					<th>userName</th>
+					<th>Datedemand</th>
+					<th>image</th>
+					<th>actions</th>
+					<th>isValid</th>
+
+
+				</tr>
+			</thead>
+			<tbody id="myTable">
+				{% for charity_demand in pagination %}
+					<tr>
+						<td>{{ charity_demand.id }}</td>
+						<td>{{ charity_demand.title }}</td>
+						<td>{{ charity_demand.receiver }}</td>
+						<td>{{ charity_demand.pointsdemanded }}</td>
+						<td>{{ charity_demand.getcategory }}</td>
+						{#tekhoo categorie a partir de la methode to string dans classe entity tnajjem tekhedh l t7ebb ml tableau te3 categorie #}
+						<td>{{ charity_demand.getusername }}</td>
+						{#tekhoo user name  a partir de la methode to string dans classe entity tnajjem tekhedh l t7ebb ml tableau te3 user  #}
+						<td>{{ charity_demand.datedemand ? charity_demand.datedemand|date('Y-m-d') : '' }}</td>
+						<td><img src="{{ asset('/uploads/images/' ~ charity_demand.FileUpload) }}" style="width: 50%; height: auto;"></td>
+
+						<td>
+							<a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_charity_demand_show', {'id': charity_demand.id}) }}">
+								show</a>
+							<a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_charity_demand_edit', {'id': charity_demand.id}) }}">edit</a>
+						</td>
+
+						<td>
+
+							<form id="validate-form" method="post" action="{{ path('app_charity_demand_View', {'id':charity_demand.id }) }}">
+								<input type="hidden" name="validate" value="true">
+
+								<button type="submit" class="btn btn-primary text-white py-3 px-4">validate</button>
+							</form>
+						</td>
+
+
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="6">no records found</td>
+
+					</tr>
+
+
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+		$(document).ready(function () {
+$("#myInput").on("keyup", function () {
+var value = $(this).val().toLowerCase();
+$("#myTable tr").filter(function () {
+$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+});
+});
+});
+	</script>
+	{# <a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_charity_demand_new') }}">Create new</a> #}
+	{# <a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_charity_demand_pdf') }} "><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V304H296 272 184 160c-35.3 0-64 28.7-64 64v80 48 16H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM160 352h24c30.9 0 56 25.1 56 56s-25.1 56-56 56h-8v32c0 8.8-7.2 16-16 16s-16-7.2-16-16V448 368c0-8.8 7.2-16 16-16zm24 80c13.3 0 24-10.7 24-24s-10.7-24-24-24h-8v48h8zm88-80h24c26.5 0 48 21.5 48 48v64c0 26.5-21.5 48-48 48H272c-8.8 0-16-7.2-16-16V368c0-8.8 7.2-16 16-16zm24 128c8.8 0 16-7.2 16-16V400c0-8.8-7.2-16-16-16h-8v96h8zm72-112c0-8.8 7.2-16 16-16h48c8.8 0 16 7.2 16 16s-7.2 16-16 16H400v32h32c8.8 0 16 7.2 16 16s-7.2 16-16 16H400v48c0 8.8-7.2 16-16 16s-16-7.2-16-16V432 368z"/></svg>imprimer</a> #}
+{% endblock %}

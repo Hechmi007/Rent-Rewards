@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New FidelityCard{% endblock %}
+
+{% block body %}
+    <h1>Create new FidelityCard</h1>
+
+    {{ include('fidelity_card/_form.html.twig') }}
+
+    <a href="{{ path('app_fidelity_card_index') }}">back to list</a>
+{% endblock %}

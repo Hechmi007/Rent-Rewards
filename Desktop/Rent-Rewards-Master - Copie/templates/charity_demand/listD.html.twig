@@ -1,0 +1,39 @@
+{% block body %}
+   <h1><center>Demande index</center></h1>
+	<div style="margin: 0 auto;display: block;width: 400px;">
+		<table width="100%" border="1">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Receiver</th>
+                <th>Pointsdemanded</th>
+                <th>category</th>
+                <th>userName</th>
+                <th>Datedemand</th>
+                
+              
+              
+            </tr>
+        </thead>
+        <tbody>
+        {% for charity_demand in charity_demands %}
+            <tr>
+                <td>{{ charity_demand.id }}</td>
+                <td>{{ charity_demand.title }}</td>
+                <td>{{ charity_demand.receiver }}</td>
+                <td>{{ charity_demand.pointsdemanded }}</td>
+                <td>{{ charity_demand.getcategory }}</td>
+                <td>{{ charity_demand.getusername }}</td>
+                <td>{{ charity_demand.datedemand ? charity_demand.datedemand|date('Y-m-d') : '' }}</td>
+                
+            </tr>
+       
+        {% endfor %}
+        </tbody>
+    </table>
+
+    
+{% endblock %}

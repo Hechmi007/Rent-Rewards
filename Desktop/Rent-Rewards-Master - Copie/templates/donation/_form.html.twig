@@ -1,0 +1,39 @@
+<div class="container">
+    {{ form_start(form , {'attr':{'novalidate':'novalidate'}}) }}
+    <div class="form-group">
+        {{ form_label(form.Pointsdonated," Please Enter The value of points")  }}
+        {{ form_widget(form.Pointsdonated , {'attr':{'class':'form-control'} }) }}
+        {% if form_errors(form.Pointsdonated) is not empty %}
+            <div class="alert alert-danger"> 
+                {{ form_errors(form.Pointsdonated) }}
+            </div>
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.datedonation," Please Enter The Date")  }}
+        {{ form_widget(form.datedonation , {'attr':{'class':'form-control'} }) }}
+        {% if form_errors(form.datedonation) is not empty %}
+            <div class="alert alert-danger"> 
+                {{ form_errors(form.datedonation) }}
+             </div>
+        {% endif %}
+    </div>
+     {# <div class="form-group">
+         {{ form_label(form.username,"Please Choose The UserName")  }}
+         {{ form_widget(form.username , {'attr':{'class':'form-control'} }) }}
+        
+            {{ form_errors(form.username) }}
+        
+    </div> #}
+     <div class="form-group">
+         {{ form_label(form.title,"Please Choose The CharityTitle")  }}
+         {{ form_widget(form.title , {'attr':{'class':'form-control'} }) }}
+        
+            {{ form_errors(form.title) }}
+        
+    </div>
+    
+    
+    <button class="btn btn-primary text-white py-3 px-4">{{ button_label|default('Save') }}</button>
+    {{ form_end(form) }}
+</div>
