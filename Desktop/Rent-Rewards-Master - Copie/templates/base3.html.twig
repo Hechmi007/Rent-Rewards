@@ -5,14 +5,13 @@
 		{% block title %}CodePen - Slider UI
 		{% endblock %}
         {% block stylesheets %}
-		<link href="https://fonts.googleapis.com/css?family=Caesar+Dressing|Open+Sans+Condensed:300" rel="stylesheet">
-        <link rel="stylesheet href="{{ asset('./donation.css')}}" 
+		
       
     {% endblock  %}
 	</head>
 
 
-	{% block title %}
+	{% block body %}
 		<!-- partial:index.partial.html -->
 		<main class="view0--active">
 			<div class="modal">
@@ -42,8 +41,9 @@
 			</div>
 		</main>
 		<!-- partial -->
-		{% block javascripts %}
-			<script src="{{ asset('/donation.js') }}"></script>
 		{% endblock %}
+		{% block javascripts %}
+			
+		
 	{% endblock %}
 </html>

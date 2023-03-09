@@ -3,10 +3,13 @@
 
 namespace App\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use App\Entity\CharityDemand;
 use App\Entity\Post;
-use App\Form\SearchType;
-use App\Form\SubmitType;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
+
+use App\Form\DemandSearchType;
 use App\Form\CharityDemandType;
 use App\Repository\CharityDemandRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -115,40 +119,128 @@ class CharityDemandController extends AbstractController
     }
 
     #[Route('/', name: 'app_charity_demand_index', methods: ['GET', 'POST'])]
-    public function index(CharityDemandRepository $charityDemandRepository): Response
+    public function index(CharityDemandRepository $charityDemandRepository, PaginatorInterface  $paginator, Request $request): Response
+
+
     {
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $charityDemandRepository = $entityManager->getRepository(Donation::class);
+
+        $queryBuilder = $charityDemandRepository->createQueryBuilder('p')
+            ->orderBy('p.id', 'DESC');
+
+        $pagination = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            5 // number of items per page
+        );
+
         return $this->render('charity_demand/index.html.twig', [
-            'charity_demands' => $charityDemandRepository->findAll(),
+            'pagination' => $pagination,
         ]);
+        
     }
-    /*   #[Route('/view', name: 'app_charity_demand_View', methods: ['GET', 'POST'])]
-    public function View(CharityDemandRepository $charityDemandRepository): Response
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #[Route('/search', name: 'ajax_search', methods: ['GET'])]
+    public function searchAction(Request $request, CharityDemandRepository $charityDemandRepository)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $requestString = $request->get('q');
+
+        $charitydemands = $em->getRepository('App\Entity\CharityDemand')->findEntitiesByString($requestString);
+
+        if (!$charitydemands) {
+            $result['charity_demands']['error'] = "NOT FOUND";
+        } else {
+            $result['charity_demands'] = $this->getRealEntities($charitydemands);
+        }
+
+        return new Response(json_encode($result));
+    }
+
+    public function getRealEntities($charitydemands)
     {
 
-
-
-
-        return $this->render('charity_demand/view.html.twig', [
-            'charity_demands' => $charityDemandRepository->findAll(),
-        ]);
-    } */
-
+        foreach ($charitydemands as $charitydemand) {
+            $realEntities[$charitydemand->getId()] = $charitydemand->getTitle() ;/*  $charitydemand->getReceiver() ; */
+        }
+        return $realEntities;
+    }
     #[Route('/view', name: 'app_charity_demand_View', methods: ['GET', 'POST'])]
-    public function View(Request $request, CharityDemandRepository $charityDemandRepository): Response
+    public function View(charityDemandRepository $charityDemandRepository,  Request $request): Response
     {
-        $charityDemands = $charityDemandRepository->findAll();
-        $form = $this->createForm(SearchType::class);
+        $charitydemands = $charityDemandRepository->findAll();
+        $form = $this->createForm(DemandSearchType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $searchquery = $form->getData()['title'];
-            $charityDemands = $charityDemandRepository->search($searchquery);
+            $charitydemands = $charityDemandRepository->search($searchquery);
         }
         return $this->render('charity_demand/view.html.twig', [
-            'charity_demands' => $charityDemands,
+            'charity_demands' => $charitydemands,
             'form' => $form->createView()
         ]);
     }
+
+
+
+
+
+
+    /* 
+
+    #[Route('/search_ajax', name: 'search_ajax', methods: ['GET', 'POST'])]
+    public function searchAjax(Request $request, charityDemandRepository $charityDemandRepository, $query)
+    {
+
+
+
+        $query = $request->query->get('query');
+        $charityDemands = $charityDemandRepository->findByTitle($query);
+
+
+        $suggestions = array_map(function ($charityDemand) {
+            return ['title' => $charityDemand->getTitle()];
+        }, $charityDemands);
+
+        return new JsonResponse($suggestions);
+    }
+
+    #[Route('/search', name: 'search', methods: ['GET', 'POST'])]
+    public function search(Request $request, charityDemandRepository $charityDemandRepository): Response
+    {
+        $form = $this->createForm(SearchType::class);
+        $form->handleRequest($request);
+
+        $charityDemands = [];
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $query = $form->get('query')->getData();
+            $charityDemands = $charityDemandRepository->findByTitle($query);
+        }
+
+        return $this->render('charity_demand/search.html.twig', [
+            'charity_demands' => $charityDemands,
+            'form' => $form->createView(),
+        ]);
+    } */
+
+
 
 
 
@@ -210,7 +302,7 @@ class CharityDemandController extends AbstractController
             $charityDemandRepository->save($charityDemand, true);
 
 
-            return $this->redirectToRoute('app_charity_demand_index', [], Response::HTTP_SEE_OTHER);
+            //return $this->redirectToRoute('app_charity_demand_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('charity_demand/new.html.twig', [

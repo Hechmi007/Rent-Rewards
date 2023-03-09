@@ -24,7 +24,7 @@ class CharityDemandType extends AbstractType
             ->add('receiver')
             ->add('pointsdemanded')
             ->add('datedemand')
-            ->add('username', EntityType::class, ['class' => User::class, 'choice_label' => 'username', 'label' => 'username'])
+      /*       ->add('username', EntityType::class, ['class' => User::class, 'choice_label' => 'username', 'label' => 'username']) */
             ->add('category', EntityType::class, ['class' => Charitycategory::class, 'choice_label' => 'Type', 'label' => 'CategorieCharity'])
              ->add('FileUpload', FileType::class,  [
                 'label' => 'FileUpload (Image file)',

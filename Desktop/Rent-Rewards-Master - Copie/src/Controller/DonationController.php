@@ -7,10 +7,11 @@ use App\Entity\CharityDemand;
 use App\Entity\Donation;
 use App\Form\DonationType;
 use App\Repository\DonationRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Dompdf\Dompdf;
 use Dompdf\Options;
-
-
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,15 +25,28 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Serializer\SerializerInterface;
+use Twilio\Rest\Client;
 
 #[Route('/donation')]
 class DonationController extends AbstractController
 {
     #[Route('/', name: 'app_donation_index', methods: ['GET'])]
-    public function index(DonationRepository $donationRepository): Response
+    public function index(DonationRepository $donationRepository, PaginatorInterface  $paginator, Request $request): Response
     {
+        $entityManager = $this->getDoctrine()->getManager();
+        $donationRepository = $entityManager->getRepository(Donation::class);
+
+        $queryBuilder = $donationRepository->createQueryBuilder('p')
+            ->orderBy('p.id', 'DESC');
+
+        $pagination = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            5 // number of items per page
+        );
+
         return $this->render('donation/index.html.twig', [
-            'donations' => $donationRepository->findAll(),
+            'pagination' => $pagination,
         ]);
     }
     #[Route("/AllDonations", name: "list")]
@@ -137,21 +151,42 @@ class DonationController extends AbstractController
             'donations' => $donationRepository->findAll(), // lhne bch etdakhell les informations bch yekhdem twigg kima les routes lokhrin
         ]);
     }
-
-
-
-
     #[Route('/new', name: 'app_donation_new', methods: ['GET', 'POST'])]
     public function new(Request $request, DonationRepository $donationRepository): Response
     {
+
+
         $donation = new Donation();
         $form = $this->createForm(DonationType::class, $donation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $donationRepository->save($donation, true);
+            $sid = 'AC1d3698dee78adbebcc6f77f1fb18346c';
+            $token = 'ed2bc0fcee11a4cb95dc365f4986dd60';
+            $from = '+15076783752';
+            $twilio = new Client($sid, $token);
 
-            return $this->redirectToRoute('app_donation_index', [], Response::HTTP_SEE_OTHER);
+            //     $message = $twilio->messages 
+            //                       ->create("+21699027754", // to 
+            //                                array(  
+            //                                    "messagingServiceSid" => "MGcbf9acd4611dfe8faf4a1265c0c05112",      
+            //                                    "body" => "Votre Commande est validé" 
+            //                                ) 
+            //                       ); 
+            //                       dump("ones ");  
+            //  dump($message->sid);  
+
+
+
+            $message = $twilio->messages
+                ->create(
+                    "+21623875468", // to
+                    array(
+                        "from" => "+15076783752",
+                        "body" => "AAA",
+                    )
+                );
         }
 
         return $this->renderForm('donation/new.html.twig', [
@@ -159,7 +194,48 @@ class DonationController extends AbstractController
             'form' => $form,
         ]);
     }
-    #[Route('/new/{id}', name: 'app_charity_demand_todonate', methods: ['GET', 'POST'])]
+
+
+
+
+
+
+
+    /* 
+    #[Route('/new', name: 'app_donation_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, DonationRepository $donationRepository): Response
+    {
+
+        $donation = new Donation();
+        $form = $this->createForm(DonationType::class, $donation);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $donationRepository->save($donation, true);
+
+            //lina code sms
+// badil fil services o fil nottifier o badil token will 
+            return $this->redirectToRoute('app_donation_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('donation/new.html.twig', [
+            'donation' => $donation,
+            'form' => $form,
+        ]);
+    } */
+    /*public function makeDonation($Points, $charityPoints)
+    {
+        if ($walletPoints >= $charityPoints) {
+            // Donation is possible
+            $walletPoints -= $charityPoints; // Reduce points from wallet
+            $message = "Donation successful! {$charityPoints} points have been donated.";
+        } else {
+            // Donation is not possible
+            $message = "Donation failed. Insufficient points in wallet.";
+        }
+        return $message;
+    } */
+     #[Route('/new/{id}', name: 'app_charity_demand_todonate', methods: ['GET', 'POST'])]
     public function ToDonate(Request $request, DonationRepository $donationRepository, CharityDemand $charityDemand): Response
     {
 
@@ -174,13 +250,14 @@ class DonationController extends AbstractController
         }
 
 
+
         return $this->renderForm('donation/new.html.twig', [
             'donation' => $donation,
             'form' => $form,
             'charity_demand' => $charityDemand,
         ]);
     }
-
+ 
 
     #[Route('/{id}', name: 'app_donation_show', methods: ['GET'])]
     public function show(Donation $donation): Response

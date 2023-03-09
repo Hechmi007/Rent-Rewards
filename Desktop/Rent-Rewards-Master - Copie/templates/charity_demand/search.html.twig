@@ -8,7 +8,7 @@
 	<div class="container">
 		<div class="row mb-5 align-items-center">
 			<div>
-				<h2><center>All Products</center>
+				<h2><center>searching</center>
 					
 					
 				</h2>
@@ -17,13 +17,13 @@
 		</div>
 		
 <div class="input-group custom-search-form">
-          <input type="text" id="search" class="form-control" placeholder="Search for a product ...">
+          <input type="text" id="search" class="form-control" placeholder="Search for a charity ...">
       </div>
 	  <br>
 	  <ul class="list-group" id="side-menu">
           <h6>Result: <span></span></h6>
 		  
-          <ul style="display: block;"class="nav nav-second-level" id="entitiesNav">
+          <ul style="display: block;"class="nav nav-second-level" id="charityNav">
           </ul>
   </ul>
 	  <!-- jQuery is necessary -->
@@ -37,14 +37,14 @@
             var minlength = 1;
             var that = this;
             var value = $(this).val();
-            var entitySelector = $("#entitiesNav").html('');
+            var entitySelector = $("#charityNav").html('');
             if (value.length >= minlength ) {
                 if (searchRequest != null)
                     searchRequest.abort();
 
                 searchRequest = $.ajax({
                     type: "GET",
-                    url: "{{ path('ajax_search') }}",
+                    url: "{{ path('search_ajax') }}",
                     data: {
                         'q' : value
                     },
@@ -58,9 +58,9 @@
                             var result = JSON.parse(msg);
                             $.each(result, function(key, arr) {
                                 $.each(arr, function(id, value) {
-                                    if (key == 'charity_demands') {
+                                    if (key == 'charitydemands') {
                                         if (id != 'error') {
-                                            entitySelector.append('<li class="list-group-item"><h5><a href="/charity/demand/'+id+'">'+value+'</a></h5></li>');
+                                            entitySelector.append('<li class="list-group-item"><h5><a href="charity/demand/'+id+'">'+value+'</a></h5></li>');
                                         } else {
                                             entitySelector.append('<li class="errorLi">'+value+'</li>');
                                         }
@@ -95,10 +95,12 @@
 											<span class="d-block mb-2 text-black-50">{{charity_demand.title}}</span>
 											<span class="d-block mb-2 text-black-50">{{charity_demand.receiver}}</span>
 											<span class="city d-block mb-3">{{charity_demand.pointsdemanded}}
+											<span <img src="{{ asset('/uploads/images/' ~ charity_demand.FileUpload) }}" style="width: 50%; height: auto;">
 											</span>
 
 											<br>
-											<a href="/charity/demand/{{charity_demand.id}}" class="btn btn-primary py-2 px-3">Rent Now
+											{# <a href="/products/{{product.id}}" class="btn btn-primary py-2 px-3">Rent Now #}
+											<a id="donate-form" method="post" action="{{ path('app_charity_demand_todonate', {'id': charity_demand.id}) }}"> donate now 
 											</a>
 										</div>
 									</div>

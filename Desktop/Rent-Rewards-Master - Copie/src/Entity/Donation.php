@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\DonationRepository;
+
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -30,14 +31,18 @@ class Donation
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Groups("donation")]
-
     private ?\DateTimeInterface $datedonation = null;
+
+
 
     #[ORM\ManyToOne(inversedBy: 'donations')]
     private ?User $username = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'donations')]
     private ?CharityDemand $title = null;
+
+    
+   
 
     public function getId(): ?int
     {
@@ -80,15 +85,26 @@ class Donation
         return $this;
     }
 
+
+
     public function getTitle(): ?CharityDemand
     {
+
         return $this->title;
     }
 
     public function setTitle(?CharityDemand $title): self
     {
+
         $this->title = $title;
 
         return $this;
+
     }
+    
+
+
+   
+   
+
 }

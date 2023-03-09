@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\CharityDemand;
-use App\Form\SubmitType;
+
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -22,6 +22,27 @@ class CharityDemandRepository extends ServiceEntityRepository
         parent::__construct($registry, CharityDemand::class);
     }
 
+    public function findEntitiesByString($str){
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT e
+                FROM App\Entity\CharityDemand e
+                WHERE e.title LIKE :str OR e.receiver LIKE :str'
+            )
+            ->setParameter('str', '%'.$str.'%')
+            ->getResult();
+    }
+
+   /*  public function findByTitle($title)
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.title LIKE :title')
+            ->setParameter('title', '%' . $title . '%')
+            ->getQuery()
+            ->getResult();
+    
+    } */
+
     public function save(CharityDemand $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
@@ -39,38 +60,43 @@ class CharityDemandRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-    public function search(string $query = '')
+    /* public function search($searchTerm)
     {
-        $qb = $this->createQueryBuilder('p');
-        
-        $qb->where('p.title LIKE :query')
-           ->setParameter('query', '%'.$query.'%')
-           ->orderBy('p.title', 'ASC');
-        
-        return $qb->getQuery()->getResult();
-    }
-//    /**
-//     * @return CharityDemand[] Returns an array of CharityDemand objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+        $qb = $this->createQueryBuilder('cd');
 
-//    public function findOneBySomeField($value): ?CharityDemand
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        if ($searchTerm) {
+            $qb->where('cd.title LIKE :searchTerm')
+                ->setParameter('searchTerm', '%' . $searchTerm . '%')
+                ->orderBy('cd.id', 'DESC');
+        }
+
+        return $qb->getQuery()->getResult();
+    } */
+   
+
+
+    //    /**
+    //     * @return CharityDemand[] Returns an array of CharityDemand objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('c')
+    //            ->andWhere('c.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('c.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?CharityDemand
+    //    {
+    //        return $this->createQueryBuilder('c')
+    //            ->andWhere('c.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

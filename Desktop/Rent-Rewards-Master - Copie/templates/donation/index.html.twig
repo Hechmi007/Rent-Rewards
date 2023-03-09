@@ -1,45 +1,69 @@
 {% extends 'base2.html.twig' %}
 
-{% block title %}Donation index{% endblock %}
+{% block title %}Donation index
+{% endblock %}
 
 {% block body %}
-    <h1>Donation index</h1>
 
-    <div class="table-responsive">
-		<table class="table table-primary align-middle">
+	<h2>recherche
+	</h2>
+	<form class="search-container">
+		<input class="form-control border-0" type="search" placeholder="Search" id="myInput">
+	</form>
+
+
+	<h1>Donation index</h1>
+
+
+	<div class="table-responsive">
+		<table class="table table-primary align-middle" id="t">
 			<thead class="table table-dark">
-            <tr>
-                <th>Id</th>
-                <th>Pointsdonated</th>
-                <th>Datedonation</th>
-                <th>userName</th>
-                <th>category</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for donation in donations %}
-            <tr>
-                <td>{{ donation.id }}</td>
-                <td>{{ donation.Pointsdonated }}</td>
-                <td>{{ donation.datedonation ? donation.datedonation|date('Y-m-d') : '' }}</td>
-                <td>{{ donation.getusername }}</td>
-                <td>{{ donation.gettitle }}</td>
-                <td>
-                    <a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_donation_show', {'id': donation.id}) }}">show</a>
-                    <a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_donation_edit', {'id': donation.id}) }}">edit</a>
-                   
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-  <a class="btn" href="{{ path('app_donation_new') }}">Create new</a>  
- <a class="btn" href="{{ path('app_donation_pdf') }}">imprimer</a>
- 
-    
+				<tr>
+					<th>Id</th>
+					<th>Pointsdonated</th>
+					<th>Datedonation</th>
+					<th>userName</th>
+					<th>category</th>
+					<th>actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for donation in pagination %}
+					<tr>
+						<td>{{ donation.id }}</td>
+						<td>{{ donation.Pointsdonated }}</td>
+						<td>{{ donation.datedonation ? donation.datedonation|date('Y-m-d') : '' }}</td>
+						<td>{{ donation.getusername }}</td>
+						<td>{{ donation.gettitle }}</td>
+						<td>
+							<a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_donation_show', {'id': donation.id}) }}">show</a>
+							<a class="btn btn-primary text-white py-3 px-4" href="{{ path('app_donation_edit', {'id': donation.id}) }}">edit</a>
+
+						</td>
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="4">no records found</td>
+					</tr>
+				{% endfor %}
+				{{ knp_pagination_render(pagination) }}
+			</tbody>
+		</tbodyid="myTable">
+	</table>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+		$(document).ready(function () {
+$("#myInput").on("keyup", function () {
+var value = $(this).val().toLowerCase();
+$("#myTable tr").filter(function () {
+$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+});
+});
+});
+	</script>
+
+	{# <a class="btn" href="{{ path('app_donation_pdf') }}">imprimer</a> #}
+	<a class="btn" href="{{ path('app_donation_new') }}">Create new</a>
+
 {% endblock %}

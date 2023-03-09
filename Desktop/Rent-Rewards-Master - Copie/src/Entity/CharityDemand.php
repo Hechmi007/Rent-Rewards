@@ -3,11 +3,18 @@
 namespace App\Entity;
 
 use App\Entity\Charitycategory;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use App\Repository\CharityDemandRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Repository\CharitycategoryRepository;
+
+
+
+
 
 #[ORM\Entity(repositoryClass: CharityDemandRepository::class)]
 class CharityDemand
@@ -50,7 +57,7 @@ class CharityDemand
     )]
     #[Assert\NotBlank(message: "le champ est vide!!!")]
     #[Assert\NotNull(message: "le valeur est NULL!!!")]
-    
+
     private ?float $pointsdemanded = null;
     // #[Assert\Date(message: "insert valid date!!!")]    
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -69,6 +76,14 @@ class CharityDemand
     #[ORM\Column(length: 255)]
     #[Groups("charityDemand")]
     private ?string $FileUpload = null;
+    #[ORM\OneToMany(mappedBy: 'titre', targetEntity: Donation::class, cascade: ["remove"],orphanRemoval: true)]
+
+    private Collection $donations;
+
+    public function __construct()
+    {
+        $this->donations = new ArrayCollection();
+    }
 
     /*     #[ORM\Column(length: 255)]
     private ?string $uploadFile = null;  */
@@ -162,11 +177,9 @@ class CharityDemand
     {
         return $this->isValid;
     }
-
     public function setIsValid(bool $isValid): self
     {
         $this->isValid = $isValid;
-
         return $this;
     }  */
 
@@ -174,11 +187,9 @@ class CharityDemand
   {
       return $this->uploadFile;
   }
-
   public function setUploadFile(string $uploadFile): self
   {
       $this->uploadFile = $uploadFile;
-
       return $this;
   } */
 
@@ -190,6 +201,35 @@ class CharityDemand
     public function setFileUpload(?string $FileUpload): self
     {
         $this->FileUpload = $FileUpload;
+
+        return $this;
+    }
+    /**
+     * @return Collection<int, Donation>
+     */
+    public function getDonations(): Collection
+    {
+        return $this->donations;
+    }
+
+    public function addDonations(Donation $donation): self
+    {
+        if (!$this->donations->contains($donation)) {
+            $this->donations->add($donation);
+            $donation->setTitle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDonations(Donation $donation): self
+    {
+        if ($this->donations->removeElement($donation)) {
+            // set the owning side to null (unless already changed)
+            if ($donation->getTitle() === $this) {
+                $donation->setTitle(null);
+            }
+        }
 
         return $this;
     }

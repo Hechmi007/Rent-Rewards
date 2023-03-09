@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 use symfony\component\Serializer\Normalizer\NormalizableInterface;
 use symfony\Component\Serializer\Annotation\Groups;
@@ -23,8 +25,33 @@ use Symfony\Component\Serializer\SerializerInterface;
 class CharitycategoryController extends AbstractController
 {
     #[Route('/', name: 'app_charitycategory_index', methods: ['GET'])]
-    public function index(CharitycategoryRepository $charitycategoryRepository): Response
-    {
+    public function index(CharitycategoryRepository $charitycategoryRepository ,   PaginatorInterface  $paginator, Request $request): Response
+    {  $entityManager = $this->getDoctrine()->getManager();
+        $charitycategoryRepository = $entityManager->getRepository(Donation::class);
+
+        $queryBuilder = $charitycategoryRepository->createQueryBuilder('p')
+            ->orderBy('p.id', 'DESC');
+
+        $pagination = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            5 // number of items per page
+        );
+
+        return $this->render('donation/index.html.twig', [
+            'pagination' => $pagination,
+        ]);
+
+
+
+
+
+
+
+
+
+
+
         return $this->render('charitycategory/index.html.twig', [
             'charitycategories' => $charitycategoryRepository->findAll(),
         ]);
